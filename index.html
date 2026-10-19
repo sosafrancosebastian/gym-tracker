@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitTracker - Control de Progreso de Gimnasio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                            accent: '#6366f1'
+                        },
+                        dark: {
+                            bg: '#0f172a',
+                            card: '#1e293b',
+                            border: '#334155',
+                            hover: '#475569'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js para gráficos de progreso -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .completed-card {
+            background: rgba(22, 101, 52, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-dark-bg text-slate-100 flex flex-col pb-12">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-30 bg-dark-bg/80 backdrop-blur-md border-b border-dark-border py-4 px-4 sm:px-8">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-brand-500/10 text-brand-500 rounded-xl border border-brand-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                        FitTracker <span class="text-xs font-medium px-2 py-0.5 rounded bg-brand-500/20 text-brand-500">PRO</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Control de Entrenamiento y Cargas</p>
+                </div>
+            </div>
+
+            <!-- Acciones globales -->
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button onclick="openAddExerciseModal()" class="flex-1 sm:flex-none px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white font-medium text-sm rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg shadow-brand-600/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Nuevo Ejercicio
+                </button>
+                <button onclick="resetDataPrompt()" class="p-2 text-slate-400 hover:text-red-400 hover:bg-dark-card rounded-xl border border-transparent hover:border-dark-border transition" title="Restablecer datos de prueba">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto w-full px-4 sm:px-8 mt-6 flex-grow space-y-6">
+
+        <!-- Selector de Días (Botonera / Tabs) -->
+        <section class="flex flex-wrap gap-2 p-1.5 bg-dark-card/60 border border-dark-border rounded-2xl">
+            <button id="tab-day1" onclick="switchDay(1)" class="flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 border">
+                <span>Día 1</span>
+                <span id="label-day1" class="text-xs font-normal opacity-75">(Empuje / Push)</span>
+            </button>
+            <button id="tab-day2" onclick="switchDay(2)" class="flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 border">
+                <span>Día 2</span>
+                <span id="label-day2" class="text-xs font-normal opacity-75">(Tracción / Pull)</span>
+            </button>
+            <button id="tab-day3" onclick="switchDay(3)" class="flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 border">
+                <span>Día 3</span>
+                <span id="label-day3" class="text-xs font-normal opacity-75">(Pierna / Legs)</span>
+            </button>
+        </section>
+
+        <!-- Barra de Progreso del Entrenamiento Diario -->
+        <section class="glass-card p-4 rounded-2xl border border-dark-border space-y-2">
+            <div class="flex justify-between items-center text-xs font-semibold">
+                <span class="text-slate-300 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Progreso de la sesión de hoy
+                </span>
+                <div class="flex items-center gap-3">
+                    <span id="progress-text" class="text-brand-400 font-bold">0 / 0 completados (0%)</span>
+                    <button onclick="resetDayProgress()" class="text-[11px] text-slate-400 hover:text-amber-400 underline transition">
+                        Reiniciar día
+                    </button>
+                </div>
+            </div>
+            <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-dark-border/50">
+                <div id="progress-bar-fill" class="bg-gradient-to-r from-brand-600 to-brand-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </section>
+
+        <!-- Cabecera del Día Seleccionado y Renombrar -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 px-1">
+            <div class="flex items-center gap-2">
+                <h2 id="current-day-title" class="text-2xl font-bold text-white tracking-tight">Día 1</h2>
+                <button onclick="openRenameDayModal()" class="text-slate-400 hover:text-brand-500 p-1 rounded transition" title="Renombrar este día">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                </button>
+            </div>
+            <p id="exercise-count-label" class="text-xs text-slate-400">0 ejercicios programados</p>
+        </div>
+
+        <!-- Lista de Ejercicios -->
+        <div id="exercises-container" class="space-y-4">
+            <!-- Renderizado dinámico aquí -->
+        </div>
+
+    </main>
+
+    <!-- Footer minimalista -->
+    <footer class="mt-12 text-center text-xs text-slate-500 border-t border-dark-border/50 pt-6">
+        <p>FitTracker App — Control de Progreso de Gimnasio</p>
+    </footer>
+
+    <!-- MODAL: Agregar / Editar Ejercicio Base -->
+    <div id="modal-exercise" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-dark-card border border-dark-border rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b border-dark-border flex justify-between items-center bg-slate-800/40">
+                <h3 id="modal-exercise-title" class="text-lg font-bold text-white">Nuevo Ejercicio</h3>
+                <button onclick="closeModal('modal-exercise')" class="text-slate-400 hover:text-white transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form id="form-exercise" onsubmit="saveExercise(event)" class="p-6 space-y-4 overflow-y-auto custom-scrollbar flex-1">
+                <input type="hidden" id="edit-ex-id">
+                
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Nombre del Ejercicio Principal *</label>
+                    <input type="text" id="ex-name" required placeholder="Ej: Press de Banca Plano con Barra" class="w-full bg-slate-900 border border-dark-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Ejercicio Alternativo</label>
+                    <input type="text" id="ex-alt-name" placeholder="Ej: Press con Mancuernas en Banco Plano" class="w-full bg-slate-900 border border-dark-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Músculo Principal</label>
+                        <select id="ex-muscle" class="w-full bg-slate-900 border border-dark-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                            <option value="Pecho">Pecho</option>
+                            <option value="Espalda">Espalda</option>
+                            <option value="Piernas">Piernas</option>
+                            <option value="Hombros">Hombros</option>
+                            <option value="Brazos">Brazos (Bíceps/Tríceps)</option>
+                            <option value="Core">Core / Abdomen</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Series y Reps Objetivo</label>
+                        <div class="flex items-center gap-2">
+                            <input type="number" id="ex-sets" min="1" max="20" placeholder="Series (4)" class="w-1/2 bg-slate-900 border border-dark-border rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                            <input type="text" id="ex-reps" placeholder="Reps (8-10)" class="w-1/2 bg-slate-900 border border-dark-border rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Link de YouTube (Explicación/Técnica)</label>
+                    <input type="url" id="ex-video" placeholder="https://www.youtube.com/watch?v=..." class="w-full bg-slate-900 border border-dark-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3 border-t border-dark-border">
+                    <button type="button" onclick="closeModal('modal-exercise')" class="px-4 py-2 text-slate-400 hover:text-white text-sm font-medium transition">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white font-medium text-sm rounded-xl transition shadow-lg shadow-brand-600/20">Guardar Ejercicio</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Registro de Sesión / Nueva Fecha -->
+    <div id="modal-log" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-dark-card border border-dark-border rounded-2xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col">
+            <div class="px-6 py-4 border-b border-dark-border flex justify-between items-center bg-slate-800/40">
+                <h3 class="text-lg font-bold text-white">Registrar Avance / Cargas</h3>
+                <button onclick="closeModal('modal-log')" class="text-slate-400 hover:text-white transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form id="form-log" onsubmit="saveLogEntry(event)" class="p-6 space-y-4">
+                <input type="hidden" id="log-ex-id">
+
+                <div class="p-3 bg-slate-900/60 rounded-xl border border-dark-border/50">
+                    <p id="log-ex-title" class="text-sm font-bold text-brand-500">Nombre Ejercicio</p>
+                    <p id="log-ex-subtitle" class="text-xs text-slate-400 mt-0.5">Ejercicio Activo</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Fecha</label>
+                    <input type="date" id="log-date" required class="w-full bg-slate-900 border border-dark-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                </div>
+
+                <!-- Checkbox Ejercicio Alternativo -->
+                <div class="flex items-center gap-3 p-3 bg-slate-900/40 border border-dark-border/50 rounded-xl">
+                    <input type="checkbox" id="log-is-alt" onchange="toggleLogAltState()" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 bg-slate-900 border-dark-border">
+                    <label for="log-is-alt" class="text-xs font-medium text-slate-300 cursor-pointer">
+                        ¿Realizaste el <span class="text-brand-500 font-semibold">Ejercicio Alternativo</span> hoy?
+                    </label>
+                </div>
+
+                <div>
+                    <label id="log-weight-label" class="block text-xs font-semibold uppercase text-slate-400 mb-1">Peso Utilizado (kg / lbs)</label>
+                    <div class="relative">
+                        <input type="number" step="0.5" id="log-weight" required placeholder="80" class="w-full bg-slate-900 border border-dark-border rounded-xl pl-4 pr-12 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                        <span class="absolute right-3 top-2.5 text-xs text-slate-500 font-medium">kg</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 mb-1">Observaciones / Notas de la sesión</label>
+                    <textarea id="log-notes" rows="3" placeholder="Ej: Buenas sensaciones, 4 series completadas sin fallo. Subir 2.5kg la próxima semana." class="w-full bg-slate-900 border border-dark-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500"></textarea>
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3 border-t border-dark-border">
+                    <button type="button" onclick="closeModal('modal-log')" class="px-4 py-2 text-slate-400 hover:text-white text-sm font-medium transition">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 bg-brand-600 hover:bg-brand-500 text-white font-medium text-sm rounded-xl transition shadow-lg shadow-brand-600/20">Guardar Avance</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Historial e Indicador de Progreso -->
+    <div id="modal-history" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-dark-card border border-dark-border rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b border-dark-border flex justify-between items-center bg-slate-800/40">
+                <div>
+                    <h3 id="history-title" class="text-lg font-bold text-white">Historial de Progreso</h3>
+                    <p id="history-subtitle" class="text-xs text-slate-400">Evolución de peso registrado</p>
+                </div>
+                <button onclick="closeModal('modal-history')" class="text-slate-400 hover:text-white transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="p-6 space-y-6 overflow-y-auto custom-scrollbar flex-1">
+                <!-- Gráfico Chart.js -->
+                <div class="bg-slate-900/80 p-4 rounded-xl border border-dark-border/60">
+                    <p class="text-xs font-semibold uppercase text-slate-400 mb-3 flex items-center justify-between">
+                        <span>Tendencia de Carga Principal vs Alternativa</span>
+                        <span class="text-[10px] text-brand-500 bg-brand-500/10 px-2 py-0.5 rounded">kg</span>
+                    </p>
+                    <div class="h-48 relative">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Tabla de Historial -->
+                <div>
+                    <h4 class="text-xs font-semibold uppercase text-slate-400 mb-2">Registros Anteriores</h4>
+                    <div class="border border-dark-border/60 rounded-xl overflow-hidden">
+                        <table class="w-full text-left text-xs text-slate-300">
+                            <thead class="bg-slate-800/60 text-slate-400 font-semibold border-b border-dark-border/60">
+                                <tr>
+                                    <th class="p-3">Fecha</th>
+                                    <th class="p-3">Tipo</th>
+                                    <th class="p-3">Peso</th>
+                                    <th class="p-3">Notas</th>
+                                    <th class="p-3 text-right">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-table-body" class="divide-y divide-dark-border/40">
+                                <!-- Filas dinámicas -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Renombrar Nombre del Día -->
+    <div id="modal-rename-day" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-dark-card border border-dark-border rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl p-6 space-y-4">
+            <h3 class="text-base font-bold text-white">Editar Etiqueta del Día</h3>
+            <div>
+                <label class="block text-xs text-slate-400 mb-1">Ejemplo: Empuje, Pecho y Tríceps, Legs</label>
+                <input type="text" id="rename-day-input" placeholder="Nombre descriptivo" class="w-full bg-slate-900 border border-dark-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeModal('modal-rename-day')" class="px-3 py-1.5 text-slate-400 text-sm">Cancelar</button>
+                <button onclick="saveDayName()" class="px-4 py-1.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl text-sm font-medium">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        // Key de LocalStorage
+        const STORAGE_KEY = 'fittracker_app_data_v2';
+
+        // Estado Global Inicial
+        let appData = {
+            activeDay: 1,
+            days: {
+                1: { name: 'Empuje (Push)' },
+                2: { name: 'Tracción (Pull)' },
+                3: { name: 'Pierna (Legs)' }
+            },
+            exercises: []
+        };
+
+        // Datos de Demostración Iniciales
+        const defaultExercises = [
+            // Día 1
+            {
+                id: 'ex-1',
+                day: 1,
+                order: 1,
+                name: 'Press de Banca Plano con Barra',
+                altName: 'Press Plano con Mancuernas',
+                muscle: 'Pecho',
+                sets: 4,
+                reps: '6-8',
+                videoUrl: 'https://www.youtube.com/watch?v=rT7DgCr-3pg',
+                completed: false,
+                logs: [
+                    { id: 'l1', date: '2026-10-01', weight: 70, isAlt: false, notes: 'Sensación sólida, completar repeticiones limpias.' },
+                    { id: 'l2', date: '2026-10-08', weight: 72.5, isAlt: false, notes: 'Subida de 2.5kg bien adaptada.' },
+                    { id: 'l3', date: '2026-10-15', weight: 75, isAlt: false, notes: 'Última rep con ligero fallo en última serie.' }
+                ]
+            },
+            {
+                id: 'ex-2',
+                day: 1,
+                order: 2,
+                name: 'Press Militar con Mancuernas',
+                altName: 'Press Militar en Máquina',
+                muscle: 'Hombros',
+                sets: 3,
+                reps: '8-10',
+                videoUrl: 'https://www.youtube.com/watch?v=HzInL_8A50g',
+                completed: false,
+                logs: [
+                    { id: 'l4', date: '2026-10-01', weight: 22, isAlt: false, notes: 'Mancuernas de 22kg por lado.' },
+                    { id: 'l5', date: '2026-10-08', weight: 24, isAlt: false, notes: 'Buena estabilidad de hombros.' }
+                ]
+            },
+            {
+                id: 'ex-3',
+                day: 1,
+                order: 3,
+                name: 'Fondos en Paralelas (Dips)',
+                altName: 'Press Francés con Barra Z',
+                muscle: 'Brazos',
+                sets: 3,
+                reps: '10-12',
+                videoUrl: 'https://www.youtube.com/watch?v=2z8JmcrW-As',
+                completed: false,
+                logs: [
+                    { id: 'l6', date: '2026-10-15', weight: 10, isAlt: false, notes: 'Con lastre de 10kg.' }
+                ]
+            },
+            // Día 2
+            {
+                id: 'ex-4',
+                day: 2,
+                order: 1,
+                name: 'Dominadas Pronadas',
+                altName: 'Jalón al Pecho en Polea',
+                muscle: 'Espalda',
+                sets: 4,
+                reps: '8',
+                videoUrl: 'https://www.youtube.com/watch?v=eGo4IYlbE5g',
+                completed: false,
+                logs: [
+                    { id: 'l7', date: '2026-10-02', weight: 0, isAlt: false, notes: 'Peso corporal completo.' }
+                ]
+            },
+            {
+                id: 'ex-5',
+                day: 2,
+                order: 2,
+                name: 'Remo con Barra',
+                altName: 'Remo con Mancuerna Unilateral',
+                muscle: 'Espalda',
+                sets: 3,
+                reps: '8-10',
+                videoUrl: 'https://www.youtube.com/watch?v=G8l_8chR5BE',
+                completed: false,
+                logs: [
+                    { id: 'l8', date: '2026-10-02', weight: 60, isAlt: false, notes: 'Buen agarre y control.' }
+                ]
+            },
+            // Día 3
+            {
+                id: 'ex-6',
+                day: 3,
+                order: 1,
+                name: 'Sentadilla Trasera con Barra',
+                altName: 'Prensa 45 Grados',
+                muscle: 'Piernas',
+                sets: 4,
+                reps: '6-8',
+                videoUrl: 'https://www.youtube.com/watch?v=ultWZbUMPL8',
+                completed: false,
+                logs: [
+                    { id: 'l9', date: '2026-10-04', weight: 100, isAlt: false, notes: 'Profundidad completa.' },
+                    { id: 'l10', date: '2026-10-11', weight: 105, isAlt: false, notes: 'RPE 8. Récord personal.' }
+                ]
+            }
+        ];
+
+        let chartInstance = null;
+
+        // Inicialización
+        window.onload = function() {
+            loadData();
+            renderTabs();
+            renderExercises();
+            // Establecer fecha por defecto en modal de logs
+            document.getElementById('log-date').value = new Date().toISOString().split('T')[0];
+        };
+
+        // Guardar/Cargar en LocalStorage
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        }
+
+        function loadData() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (data) {
+                try {
+                    appData = JSON.parse(data);
+                } catch (e) {
+                    console.error("Error al parsear datos guardados:", e);
+                    setDefaultData();
+                }
+            } else {
+                setDefaultData();
+            }
+        }
+
+        function setDefaultData() {
+            appData = {
+                activeDay: 1,
+                days: {
+                    1: { name: 'Empuje (Push)' },
+                    2: { name: 'Tracción (Pull)' },
+                    3: { name: 'Pierna (Legs)' }
+                },
+                exercises: JSON.parse(JSON.stringify(defaultExercises))
+            };
+            saveData();
+        }
+
+        function resetDataPrompt() {
+            if (confirm("¿Deseas restablecer todos los ejercicios y registros a los datos de prueba iniciales?")) {
+                setDefaultData();
+                renderTabs();
+                renderExercises();
+            }
+        }
+
+        // Navegación de Días
+        function switchDay(dayNum) {
+            appData.activeDay = dayNum;
+            saveData();
+            renderTabs();
+            renderExercises();
+        }
+
+        function renderTabs() {
+            for (let i = 1; i <= 3; i++) {
+                const btn = document.getElementById(`tab-day${i}`);
+                const label = document.getElementById(`label-day${i}`);
+                const isSelected = appData.activeDay === i;
+                
+                label.textContent = appData.days[i] ? `(${appData.days[i].name})` : '';
+
+                if (isSelected) {
+                    btn.className = "flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 border border-brand-500 bg-brand-500/10 text-brand-500 shadow-md";
+                } else {
+                    btn.className = "flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 border border-transparent text-slate-400 hover:text-white hover:bg-slate-800/50";
+                }
+            }
+
+            // Actualizar cabecera
+            const currentDayName = appData.days[appData.activeDay]?.name || `Día ${appData.activeDay}`;
+            document.getElementById('current-day-title').textContent = `Día ${appData.activeDay}: ${currentDayName}`;
+        }
+
+        // Renombrar Día
+        function openRenameDayModal() {
+            document.getElementById('rename-day-input').value = appData.days[appData.activeDay]?.name || '';
+            openModal('modal-rename-day');
+        }
+
+        function saveDayName() {
+            const val = document.getElementById('rename-day-input').value.trim();
+            if (val) {
+                appData.days[appData.activeDay].name = val;
+                saveData();
+                renderTabs();
+                closeModal('modal-rename-day');
+            }
+        }
+
+        // Obtener color según músculo
+        function getMuscleBadgeColor(muscle) {
+            switch(muscle) {
+                case 'Pecho': return 'bg-red-500/10 text-red-400 border-red-500/20';
+                case 'Espalda': return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+                case 'Piernas': return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+                case 'Hombros': return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+                case 'Brazos': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+                case 'Core': return 'bg-teal-500/10 text-teal-400 border-teal-500/20';
+                default: return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+            }
+        }
+
+        // Alternar Estado de Completado
+        function toggleExerciseCompleted(id) {
+            const ex = appData.exercises.find(e => e.id === id);
+            if (ex) {
+                ex.completed = !ex.completed;
+                saveData();
+                renderExercises();
+            }
+        }
+
+        // Reiniciar Progreso del Día
+        function resetDayProgress() {
+            const dayExercises = appData.exercises.filter(ex => ex.day === appData.activeDay);
+            if (dayExercises.length === 0) return;
+
+            if (confirm("¿Quieres marcar todos los ejercicios de hoy como pendientes para una nueva rutina?")) {
+                dayExercises.forEach(ex => ex.completed = false);
+                saveData();
+                renderExercises();
+            }
+        }
+
+        // Actualizar Barra de Progreso
+        function updateProgressBar(dayExercises) {
+            const total = dayExercises.length;
+            const completedCount = dayExercises.filter(e => e.completed).length;
+            const percentage = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+
+            document.getElementById('progress-text').textContent = `${completedCount} / ${total} completados (${percentage}%)`;
+            document.getElementById('progress-bar-fill').style.width = `${percentage}%`;
+        }
+
+        // Renderizado de Ejercicios
+        function renderExercises() {
+            const container = document.getElementById('exercises-container');
+            const dayExercises = appData.exercises
+                .filter(ex => ex.day === appData.activeDay)
+                .sort((a, b) => a.order - b.order);
+
+            document.getElementById('exercise-count-label').textContent = `${dayExercises.length} ejercicio(s) programado(s)`;
+            
+            // Actualizar la barra superior
+            updateProgressBar(dayExercises);
+
+            if (dayExercises.length === 0) {
+                container.innerHTML = `
+                    <div class="glass-card rounded-2xl p-8 text-center border border-dashed border-dark-border">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto text-slate-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        <p class="text-slate-400 font-medium">No hay ejercicios agregados para este día.</p>
+                        <p class="text-xs text-slate-500 mt-1">Haz clic en "+ Nuevo Ejercicio" para armar tu rutina.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = dayExercises.map((ex, index) => {
+                const lastLog = ex.logs && ex.logs.length > 0 ? ex.logs[ex.logs.length - 1] : null;
+                const muscleColor = getMuscleBadgeColor(ex.muscle);
+                const isCompleted = !!ex.completed;
+
+                return `
+                <div class="${isCompleted ? 'completed-card' : 'glass-card'} rounded-2xl p-5 border transition-all duration-300 shadow-lg relative">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        
+                        <!-- Columna Izquierda: Orden + Títulos + Check -->
+                        <div class="flex items-start gap-3.5 flex-1">
+                            
+                            <!-- Botón Check / Completado -->
+                            <button onclick="toggleExerciseCompleted('${ex.id}')" title="${isCompleted ? 'Marcar como no completado' : 'Marcar como completado'}" class="mt-0.5 p-2 rounded-xl transition duration-200 border flex items-center justify-center ${isCompleted ? 'bg-brand-500 text-white border-brand-400 shadow-lg shadow-brand-500/30' : 'bg-slate-900/80 text-slate-500 border-dark-border hover:border-brand-500 hover:text-brand-400'}">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                            </button>
+
+                            <!-- Orden y Controles -->
+                            <div class="flex flex-col items-center justify-center bg-slate-900/80 rounded-xl p-2 min-w-[42px] border border-dark-border/60">
+                                <span class="text-xs font-bold text-brand-500">#${index + 1}</span>
+                                <div class="flex flex-col gap-0.5 mt-1">
+                                    <button onclick="moveOrder('${ex.id}', -1)" ${index === 0 ? 'disabled class="opacity-20"' : 'class="text-slate-400 hover:text-white"'}>
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+                                    </button>
+                                    <button onclick="moveOrder('${ex.id}', 1)" ${index === dayExercises.length - 1 ? 'disabled class="opacity-20"' : 'class="text-slate-400 hover:text-white"'}>
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h3 class="text-base font-bold text-white tracking-tight ${isCompleted ? 'line-through opacity-75' : ''}">${ex.name}</h3>
+                                    <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md border ${muscleColor}">
+                                        ${ex.muscle}
+                                    </span>
+                                    ${isCompleted ? '<span class="text-[10px] bg-brand-500/20 text-brand-400 font-bold px-2 py-0.5 rounded border border-brand-500/30">✓ LISTO</span>' : ''}
+                                </div>
+
+                                ${ex.altName ? `
+                                <p class="text-xs text-slate-400 flex items-center gap-1.5">
+                                    <span class="text-slate-500">Alt:</span> ${ex.altName}
+                                </p>
+                                ` : ''}
+
+                                <div class="flex items-center gap-4 text-xs text-slate-400 pt-1">
+                                    <span class="bg-slate-800/80 px-2 py-0.5 rounded border border-dark-border/40 font-mono text-slate-300">
+                                        🎯 ${ex.sets || '-'} series × ${ex.reps || '-'} reps
+                                    </span>
+
+                                    ${ex.videoUrl ? `
+                                    <a href="${ex.videoUrl}" target="_blank" class="inline-flex items-center gap-1 text-red-400 hover:text-red-300 transition font-medium hover:underline">
+                                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></a text>
+                                        Técnica
+                                    </a>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Columna Central: Último Registro de Carga -->
+                        <div class="bg-slate-900/50 rounded-xl p-3 border border-dark-border/40 flex items-center justify-between md:justify-center gap-4 min-w-[200px]">
+                            <div>
+                                <p class="text-[10px] uppercase font-semibold text-slate-500 tracking-wider">Última Carga</p>
+                                <p class="text-lg font-bold text-brand-500">
+                                    ${lastLog ? `${lastLog.weight} <span class="text-xs font-normal text-slate-400">kg</span>` : '<span class="text-xs font-normal text-slate-500">Sin registros</span>'}
+                                </p>
+                            </div>
+                            ${lastLog ? `
+                            <div class="text-right">
+                                <span class="text-[10px] text-slate-400 block">${lastLog.date}</span>
+                                <span class="text-[10px] font-medium px-1.5 py-0.5 rounded ${lastLog.isAlt ? 'bg-amber-500/20 text-amber-300' : 'bg-slate-800 text-slate-300'}">
+                                    ${lastLog.isAlt ? 'Alternativo' : 'Principal'}
+                                </span>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Columna Derecha: Acciones principales -->
+                        <div class="flex items-center justify-end gap-2 border-t md:border-t-0 border-dark-border pt-3 md:pt-0">
+                            <button onclick="openLogModal('${ex.id}')" class="px-3 py-2 bg-brand-600/20 hover:bg-brand-600/30 text-brand-400 border border-brand-500/30 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                                Anotar Peso
+                            </button>
+
+                            <button onclick="openHistoryModal('${ex.id}')" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition" title="Ver Historial y Progreso">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                            </button>
+
+                            <button onclick="openEditExerciseModal('${ex.id}')" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition" title="Editar Ejercicio">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                            </button>
+
+                            <button onclick="deleteExercise('${ex.id}')" class="p-2 bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-400 rounded-xl transition" title="Eliminar">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // Reordenamiento de ejercicios
+        function moveOrder(id, delta) {
+            const dayExercises = appData.exercises
+                .filter(ex => ex.day === appData.activeDay)
+                .sort((a, b) => a.order - b.order);
+
+            const index = dayExercises.findIndex(e => e.id === id);
+            if (index < 0) return;
+
+            const targetIndex = index + delta;
+            if (targetIndex >= 0 && targetIndex < dayExercises.length) {
+                // Intercambiar orden
+                const tempOrder = dayExercises[index].order;
+                dayExercises[index].order = dayExercises[targetIndex].order;
+                dayExercises[targetIndex].order = tempOrder;
+
+                saveData();
+                renderExercises();
+            }
+        }
+
+        // Modales y CRUD Ejercicio
+        function openAddExerciseModal() {
+            document.getElementById('modal-exercise-title').textContent = "Nuevo Ejercicio";
+            document.getElementById('edit-ex-id').value = "";
+            document.getElementById('form-exercise').reset();
+            openModal('modal-exercise');
+        }
+
+        function openEditExerciseModal(id) {
+            const ex = appData.exercises.find(e => e.id === id);
+            if (!ex) return;
+
+            document.getElementById('modal-exercise-title').textContent = "Editar Ejercicio";
+            document.getElementById('edit-ex-id').value = ex.id;
+            document.getElementById('ex-name').value = ex.name || "";
+            document.getElementById('ex-alt-name').value = ex.altName || "";
+            document.getElementById('ex-muscle').value = ex.muscle || "Pecho";
+            document.getElementById('ex-sets').value = ex.sets || "";
+            document.getElementById('ex-reps').value = ex.reps || "";
+            document.getElementById('ex-video').value = ex.videoUrl || "";
+
+            openModal('modal-exercise');
+        }
+
+        function saveExercise(event) {
+            event.preventDefault();
+            const id = document.getElementById('edit-ex-id').value;
+            const name = document.getElementById('ex-name').value.trim();
+            const altName = document.getElementById('ex-alt-name').value.trim();
+            const muscle = document.getElementById('ex-muscle').value;
+            const sets = document.getElementById('ex-sets').value;
+            const reps = document.getElementById('ex-reps').value;
+            const videoUrl = document.getElementById('ex-video').value.trim();
+
+            if (id) {
+                // Modificar existente
+                const ex = appData.exercises.find(e => e.id === id);
+                if (ex) {
+                    ex.name = name;
+                    ex.altName = altName;
+                    ex.muscle = muscle;
+                    ex.sets = sets;
+                    ex.reps = reps;
+                    ex.videoUrl = videoUrl;
+                }
+            } else {
+                // Crear nuevo
+                const dayExercises = appData.exercises.filter(e => e.day === appData.activeDay);
+                const nextOrder = dayExercises.length > 0 ? Math.max(...dayExercises.map(e => e.order)) + 1 : 1;
+
+                const newEx = {
+                    id: 'ex-' + Date.now(),
+                    day: appData.activeDay,
+                    order: nextOrder,
+                    name,
+                    altName,
+                    muscle,
+                    sets,
+                    reps,
+                    videoUrl,
+                    completed: false,
+                    logs: []
+                };
+                appData.exercises.push(newEx);
+            }
+
+            saveData();
+            renderExercises();
+            closeModal('modal-exercise');
+        }
+
+        function deleteExercise(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar este ejercicio y su historial?")) {
+                appData.exercises = appData.exercises.filter(e => e.id !== id);
+                saveData();
+                renderExercises();
+            }
+        }
+
+        // Modal y Registro de Cargas (Logs)
+        function openLogModal(exId) {
+            const ex = appData.exercises.find(e => e.id === exId);
+            if (!ex) return;
+
+            document.getElementById('log-ex-id').value = ex.id;
+            document.getElementById('log-ex-title').textContent = ex.name;
+            document.getElementById('log-ex-subtitle').textContent = ex.altName ? `Alt: ${ex.altName}` : 'Sin ejercicio alternativo';
+            document.getElementById('log-is-alt').checked = false;
+            document.getElementById('log-weight').value = "";
+            document.getElementById('log-notes').value = "";
+            toggleLogAltState();
+
+            openModal('modal-log');
+        }
+
+        function toggleLogAltState() {
+            const isAlt = document.getElementById('log-is-alt').checked;
+            const exId = document.getElementById('log-ex-id').value;
+            const ex = appData.exercises.find(e => e.id === exId);
+
+            const label = document.getElementById('log-weight-label');
+            if (isAlt && ex && ex.altName) {
+                label.innerHTML = `Peso Utilizado para <span class="text-amber-400">${ex.altName}</span> (kg/lbs)`;
+            } else {
+                label.innerHTML = `Peso Utilizado para <span class="text-brand-500">${ex ? ex.name : 'Principal'}</span> (kg/lbs)`;
+            }
+        }
+
+        function saveLogEntry(event) {
+            event.preventDefault();
+            const exId = document.getElementById('log-ex-id').value;
+            const date = document.getElementById('log-date').value;
+            const weight = parseFloat(document.getElementById('log-weight').value);
+            const isAlt = document.getElementById('log-is-alt').checked;
+            const notes = document.getElementById('log-notes').value.trim();
+
+            const ex = appData.exercises.find(e => e.id === exId);
+            if (!ex) return;
+
+            if (!ex.logs) ex.logs = [];
+
+            ex.logs.push({
+                id: 'log-' + Date.now(),
+                date,
+                weight,
+                isAlt,
+                notes
+            });
+
+            // Al registrar el peso, marcar también automáticamente como completado
+            ex.completed = true;
+
+            // Ordenar por fecha
+            ex.logs.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            saveData();
+            renderExercises();
+            closeModal('modal-log');
+        }
+
+        function deleteLog(exId, logId) {
+            if (confirm("¿Borrar este registro de carga?")) {
+                const ex = appData.exercises.find(e => e.id === exId);
+                if (ex && ex.logs) {
+                    ex.logs = ex.logs.filter(l => l.id !== logId);
+                    saveData();
+                    renderExercises();
+                    openHistoryModal(exId); // Recargar modal
+                }
+            }
+        }
+
+        // Historial y Gráfico de Progreso
+        function openHistoryModal(exId) {
+            const ex = appData.exercises.find(e => e.id === exId);
+            if (!ex) return;
+
+            document.getElementById('history-title').textContent = ex.name;
+            document.getElementById('history-subtitle').textContent = `Historial de cargas (${ex.muscle})`;
+
+            const tbody = document.getElementById('history-table-body');
+            const logs = ex.logs || [];
+
+            if (logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500">No hay registros de peso aún.</td></tr>`;
+            } else {
+                tbody.innerHTML = [...logs].reverse().map(l => `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="p-3 font-mono text-slate-300">${l.date}</td>
+                        <td class="p-3">
+                            <span class="px-2 py-0.5 rounded text-[10px] ${l.isAlt ? 'bg-amber-500/20 text-amber-300' : 'bg-brand-500/20 text-brand-300'}">
+                                ${l.isAlt ? 'Alternativo' : 'Principal'}
+                            </span>
+                        </td>
+                        <td class="p-3 font-bold text-white">${l.weight} kg</td>
+                        <td class="p-3 text-slate-400 max-w-xs truncate" title="${l.notes || ''}">${l.notes || '-'}</td>
+                        <td class="p-3 text-right">
+                            <button onclick="deleteLog('${ex.id}', '${l.id}')" class="text-slate-500 hover:text-red-400 p-1">
+                                &times;
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            renderChart(logs);
+            openModal('modal-history');
+        }
+
+        function renderChart(logs) {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            const sortedLogs = [...logs].sort((a, b) => new Date(a.date) - new Date(b.date));
+            const labels = sortedLogs.map(l => l.date);
+            const dataMain = sortedLogs.map(l => !l.isAlt ? l.weight : null);
+            const dataAlt = sortedLogs.map(l => l.isAlt ? l.weight : null);
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Ejercicio Principal (kg)',
+                            data: dataMain,
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            borderWidth: 2,
+                            spanGaps: true,
+                            tension: 0.3,
+                            pointRadius: 4
+                        },
+                        {
+                            label: 'Ejercicio Alternativo (kg)',
+                            data: dataAlt,
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            borderWidth: 2,
+                            spanGaps: true,
+                            tension: 0.3,
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#94a3b8',
+                                font: { size: 11 }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#64748b', font: { size: 10 } },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        },
+                        y: {
+                            ticks: { color: '#64748b', font: { size: 10 } },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Helpers Modales
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
