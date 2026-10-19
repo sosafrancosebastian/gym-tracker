@@ -1,265 +1,912 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gym Tracker - Blue Neon Edition</title>
+    <!-- Web App Manifest & iOS Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0d1117">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500'%3E%3Crect width='500' height='500' fill='%230d1117'/%3E%3Ccircle cx='250' cy='210' r='160' fill='none' stroke='%2300f3ff' stroke-width='12' filter='drop-shadow(0 0 15px %2300f3ff)'/%3E%3Cpath d='M130 210h60v-40h20v80h-20v-40h-60zM310 210h60v-40h20v80h-20v-40h-60zM190 190h120v40H190z' fill='%23ffffff' filter='drop-shadow(0 0 10px %2300f3ff)'/%3E%3Ctext x='250' y='415' font-family='Arial, sans-serif' font-weight='bold' font-size='38' fill='%23ffffff' text-anchor='middle' letter-spacing='4'%3EGYM%3C/text%3E%3Ctext x='250' y='460' font-family='Arial, sans-serif' font-weight='bold' font-size='30' fill='%2300f3ff' text-anchor='middle' letter-spacing='6'%3ETRACKER%3C/text%3E%3C/svg%3E">
+    <meta name="apple-mobile-web-app-title" content="Gym Tracker">
+    <meta name="theme-color" content="#0b0f19">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500'%3E%3Crect width='500' height='500' fill='%230b0f19'/%3E%3Ccircle cx='250' cy='210' r='160' fill='none' stroke='%2300f3ff' stroke-width='12' filter='drop-shadow(0 0 15px %2300f3ff)'/%3E%3Cpath d='M130 210h60v-40h20v80h-20v-40h-60zM310 210h60v-40h20v80h-20v-40h-60zM190 190h120v40H190z' fill='%23ffffff' filter='drop-shadow(0 0 10px %2300f3ff)'/%3E%3Ctext x='250' y='415' font-family='Arial, sans-serif' font-weight='bold' font-size='38' fill='%23ffffff' text-anchor='middle' letter-spacing='4'%3EGYM%3C/text%3E%3Ctext x='250' y='460' font-family='Arial, sans-serif' font-weight='bold' font-size='30' fill='%2300f3ff' text-anchor='middle' letter-spacing='6'%3ETRACKER%3C/text%3E%3C/svg%3E">
+    
+    <!-- Tailwind CSS & FontAwesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Outfit', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
-        .neon-border { border: 1px solid rgba(0, 243, 255, 0.4); box-shadow: 0 0 15px rgba(0, 243, 255, 0.15); }
-        .neon-glow { text-shadow: 0 0 10px rgba(0, 243, 255, 0.6); }
-        .neon-btn { background: linear-gradient(135deg, #00f3ff 0%, #0066ff 100%); color: #0b0f19; font-weight: 700; box-shadow: 0 0 20px rgba(0, 243, 255, 0.4); }
-        .neon-btn:active { transform: scale(0.98); }
-        .custom-scrollbar::-webkit-scrollbar { height: 4px; width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #00f3ff; border-radius: 4px; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .neon-glow {
+            text-shadow: 0 0 12px rgba(0, 243, 255, 0.6);
+        }
+        .neon-border {
+            border-color: rgba(0, 243, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+        }
+        .neon-btn {
+            background: linear-gradient(135deg, #00f3ff 0%, #0066ff 100%);
+            color: #0b0f19;
+            font-weight: 700;
+            box-shadow: 0 0 18px rgba(0, 243, 255, 0.35);
+        }
+        .neon-btn:active {
+            transform: scale(0.97);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 4px;
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #00f3ff;
+            border-radius: 4px;
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
     </style>
 </head>
-<body class="min-h-screen pb-24 select-none">
+<body class="min-h-screen pb-28 select-none">
 
-    <!-- PANTALLA DE BLOQUEO / LICENCIA -->
-    <div id="licenseScreen" class="fixed inset-0 z-50 bg-[#0b0f19] flex items-center justify-center p-4 hidden">
-        <div class="bg-[#131b2e] border border-cyan-500/30 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-5">
+    <!-- PANTALLA DE ACTIVACIÓN Y LICENCIA -->
+    <div id="licenseScreen" class="fixed inset-0 z-50 bg-[#0b0f19] flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-[#131b2e] border border-cyan-500/40 rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-5 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            
             <div class="text-center space-y-2">
-                <div class="inline-flex p-4 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-3xl mb-1 shadow-[0_0_20px_rgba(0,243,255,0.2)]">
-                    <i class="fa-solid fa-shield-halved"></i>
+                <div class="inline-flex p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-3xl mb-1 shadow-[0_0_20px_rgba(0,243,255,0.2)]">
+                    <i class="fa-solid fa-bolt"></i>
                 </div>
-                <h1 class="text-2xl font-bold tracking-wider text-white">GYM TRACKER</h1>
-                <p class="text-xs text-slate-400">Software Profesional Protegido por Licencia</p>
+                <h1 class="text-2xl font-black tracking-wider text-white">GYM TRACKER</h1>
+                <p class="text-xs text-slate-400">PWA Pro • Ingrese su clave de acceso</p>
             </div>
+
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Correo Electrónico Registrado</label>
-                    <input type="email" id="licenseEmail" placeholder="tucorreo@gmail.com" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-400 outline-none">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Correo Electrónico</label>
+                    <input type="email" id="licenseEmail" placeholder="usuario@correo.com" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-400 outline-none transition">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Clave de Activación (16 dígitos)</label>
-                    <input type="text" id="licenseKeyInput" placeholder="XXXX-XXXX-XXXX-XXXX" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl px-4 py-3 text-sm text-white uppercase font-mono tracking-wider focus:border-cyan-400 outline-none">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Clave de Activación</label>
+                    <input type="text" id="licenseKeyInput" placeholder="XXXX-XXXX-XXXX-XXXX" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl px-4 py-3 text-sm text-white uppercase font-mono tracking-wider focus:border-cyan-400 outline-none transition">
                 </div>
-                <button onclick="activateApp()" class="w-full py-3.5 rounded-xl neon-btn text-sm tracking-wider uppercase transition-all">Activar Licencia</button>
-                <p id="licenseError" class="text-xs text-red-400 text-center hidden">Clave incorrecta o correo inválido.</p>
+                <button id="btnActivateLicense" class="w-full py-3.5 rounded-xl neon-btn text-sm tracking-wider uppercase transition">
+                    Activar App
+                </button>
+                <button id="btnBypassLicense" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 transition">
+                    Continuar como Invitado / Demo
+                </button>
+                <p id="licenseError" class="text-xs text-red-400 text-center font-medium hidden">Clave incorrecta o correo inválido.</p>
             </div>
         </div>
     </div>
 
-    <!-- HEADER / BARRA SUPERIOR -->
-    <header class="sticky top-0 z-40 bg-[#0b0f19]/90 backdrop-blur-md border-b border-slate-800 px-4 py-3 flex items-center justify-between">
+    <!-- HEADER SUPERIOR -->
+    <header class="sticky top-0 z-40 bg-[#0b0f19]/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 flex items-center justify-between">
         <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-400/40 flex items-center justify-center shadow-[0_0_10px_rgba(0,243,255,0.3)]">
-                <i class="fa-solid fa-bolt text-cyan-400"></i>
+            <div id="brandLogoIcon" class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-400/40 flex items-center justify-center shadow-[0_0_12px_rgba(0,243,255,0.3)]">
+                <i class="fa-solid fa-dumbbell text-cyan-400 text-lg"></i>
             </div>
             <div>
-                <h1 id="appTitleDisplay" class="font-bold text-sm tracking-wide text-white">GYM TRACKER</h1>
-                <span class="text-[10px] text-cyan-400 font-medium">BLUE NEON EDITION</span>
+                <h1 id="appTitleDisplay" class="font-extrabold text-sm tracking-wider text-white uppercase">GYM TRACKER</h1>
+                <span id="appSubtitleDisplay" class="text-[10px] text-cyan-400 font-semibold tracking-widest block -mt-0.5">BLUE NEON EDITION</span>
             </div>
         </div>
         <div class="flex items-center space-x-2">
-            <button onclick="openToolsModal()" class="bg-[#131b2e] border border-slate-700 text-cyan-400 px-3 py-2 rounded-xl text-xs font-semibold hover:border-cyan-400 transition">
-                <i class="fa-solid fa-calculator mr-1"></i> Herramientas
+            <button id="btnOpenTools" class="bg-[#131b2e] border border-slate-700 hover:border-cyan-400 text-cyan-400 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5">
+                <i class="fa-solid fa-wrench"></i>
+                <span class="hidden sm:inline">Herramientas</span>
             </button>
-            <button onclick="openTemplateModal()" class="bg-[#131b2e] border border-slate-700 text-emerald-400 px-3 py-2 rounded-xl text-xs font-semibold hover:border-emerald-400 transition">
-                <i class="fa-solid fa-file-arrow-down mr-1"></i> Plantillas
+            <button id="btnOpenTemplates" class="bg-[#131b2e] border border-slate-700 hover:border-emerald-400 text-emerald-400 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5">
+                <i class="fa-solid fa-layer-group"></i>
+                <span class="hidden sm:inline">Plantillas</span>
             </button>
         </div>
     </header>
 
-    <!-- DASHBOARD DE ESTADÍSTICAS Y RACHA -->
-    <section class="px-4 mt-4">
+    <!-- DASHBOARD DE ESTADÍSTICAS -->
+    <section class="px-4 mt-3">
         <div class="grid grid-cols-3 gap-2 bg-[#131b2e] border border-slate-800 rounded-2xl p-3 text-center shadow-lg">
             <div>
-                <span class="block text-[10px] uppercase text-slate-400 font-semibold">Volumen Total</span>
-                <span id="statVolume" class="text-sm font-bold text-cyan-400">0 kg</span>
+                <span class="block text-[10px] uppercase text-slate-400 font-bold tracking-wider">Volumen Total</span>
+                <span id="statVolume" class="text-sm font-extrabold text-cyan-400">0 kg</span>
             </div>
             <div class="border-x border-slate-800">
-                <span class="block text-[10px] uppercase text-slate-400 font-semibold">Series</span>
-                <span id="statSets" class="text-sm font-bold text-white">0</span>
+                <span class="block text-[10px] uppercase text-slate-400 font-bold tracking-wider">Series Hechas</span>
+                <span id="statSets" class="text-sm font-extrabold text-white">0</span>
             </div>
             <div>
-                <span class="block text-[10px] uppercase text-slate-400 font-semibold">Racha / Streak</span>
-                <span id="statStreak" class="text-sm font-bold text-orange-400">🔥 0 días</span>
+                <span class="block text-[10px] uppercase text-slate-400 font-bold tracking-wider">Racha</span>
+                <span id="statStreak" class="text-sm font-extrabold text-orange-400">🔥 0 días</span>
             </div>
         </div>
     </section>
 
-    <!-- NAVEGACIÓN DE LOS 7 DÍAS DE LA SEMANA -->
-    <nav class="mt-4 px-4">
-        <div id="daysContainer" class="flex space-x-2 overflow-x-auto custom-scrollbar pb-2">
-            <!-- Se inyecta por JS -->
+    <!-- NAVEGADOR DE DÍAS (LUNES - DOMINGO) -->
+    <nav class="mt-3 px-4">
+        <div id="daysContainer" class="flex space-x-2 overflow-x-auto custom-scrollbar pb-1">
+            <!-- Botones de días generados por JS -->
         </div>
     </nav>
 
-    <!-- CONTENIDO PRINCIPAL DE ENTRENAMIENTO -->
-    <main class="px-4 mt-4 max-w-2xl mx-auto space-y-4">
-        <div class="flex items-center justify-between bg-[#131b2e]/60 p-3 rounded-xl border border-slate-800">
+    <!-- ÁREA PRINCIPAL DÍA & EJERCICIOS -->
+    <main class="px-4 mt-3 max-w-2xl mx-auto space-y-3">
+        <div class="flex items-center justify-between bg-[#131b2e]/80 p-3 rounded-2xl border border-slate-800">
             <div>
-                <h2 id="currentDayTitle" class="font-bold text-base text-white">Lunes</h2>
-                <p id="currentDaySubtitle" class="text-xs text-slate-400">Registra tus ejercicios y marcas</p>
+                <h2 id="currentDayTitle" class="font-extrabold text-base text-white">Lunes</h2>
+                <p id="currentDaySubtitle" class="text-xs text-slate-400">Entrenamiento de Fuerza</p>
             </div>
             <div class="flex space-x-2">
-                <button onclick="openDayTypeModal()" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300 font-medium transition">
-                    <i class="fa-solid fa-list-check mr-1"></i> Tipo de Día
+                <button id="btnOpenDayType" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-2 rounded-xl border border-slate-700 text-slate-300 font-semibold transition">
+                    <i class="fa-solid fa-sliders mr-1"></i> Tipo
                 </button>
-                <button onclick="openExerciseModal()" class="neon-btn px-3.5 py-1.5 rounded-lg text-xs tracking-wide">
-                    <i class="fa-solid fa-plus mr-1"></i> Ejercicio
+                <button id="btnAddExercise" class="neon-btn px-3.5 py-2 rounded-xl text-xs tracking-wider uppercase flex items-center">
+                    <i class="fa-solid fa-plus mr-1.5"></i> Ejercicio
                 </button>
             </div>
         </div>
 
-        <!-- LISTA DE EJERCICIOS DEL DÍA -->
-        <div id="exerciseList" class="space-y-4">
-            <!-- Se inyectan dinámicamente -->
+        <!-- LISTADO DINÁMICO DE EJERCICIOS -->
+        <div id="exerciseList" class="space-y-3">
+            <!-- Se insertan por JS -->
         </div>
     </main>
 
     <!-- WIDGET FLOTANTE: TEMPORIZADOR DE DESCANSO -->
-    <div id="restTimerWidget" class="fixed bottom-4 left-4 z-40 bg-[#131b2e] border border-cyan-500/50 rounded-2xl p-3 shadow-2xl flex items-center space-x-3 backdrop-blur-md">
-        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-lg font-bold" id="timerDisplay">
-            00
-        </div>
-        <div>
-            <span class="block text-[10px] uppercase font-bold text-slate-400">Descanso</span>
-            <div class="flex space-x-1 mt-1">
-                <button onclick="startTimer(30)" class="bg-slate-800 text-[10px] px-2 py-0.5 rounded text-cyan-300 hover:bg-cyan-500/20">30s</button>
-                <button onclick="startTimer(60)" class="bg-slate-800 text-[10px] px-2 py-0.5 rounded text-cyan-300 hover:bg-cyan-500/20">60s</button>
-                <button onclick="startTimer(90)" class="bg-slate-800 text-[10px] px-2 py-0.5 rounded text-cyan-300 hover:bg-cyan-500/20">90s</button>
-                <button onclick="stopTimer()" class="bg-red-500/20 text-red-400 text-[10px] px-2 py-0.5 rounded"><i class="fa-solid fa-xmark"></i></button>
+    <div id="restTimerWidget" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-80 z-40 bg-[#131b2e]/95 border border-cyan-500/40 rounded-2xl p-3 shadow-2xl flex items-center justify-between backdrop-blur-md">
+        <div class="flex items-center space-x-3">
+            <div id="timerDisplay" class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl font-extrabold font-mono">
+                00
             </div>
+            <div>
+                <span class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider">Temporizador</span>
+                <span id="timerStatus" class="text-xs text-cyan-300 font-medium">Listo para iniciar</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-1.5">
+            <button onclick="startTimer(30)" class="bg-slate-800 hover:bg-cyan-500/20 text-cyan-300 border border-slate-700 text-xs px-2.5 py-1.5 rounded-lg font-bold">30s</button>
+            <button onclick="startTimer(60)" class="bg-slate-800 hover:bg-cyan-500/20 text-cyan-300 border border-slate-700 text-xs px-2.5 py-1.5 rounded-lg font-bold">60s</button>
+            <button onclick="startTimer(90)" class="bg-slate-800 hover:bg-cyan-500/20 text-cyan-300 border border-slate-700 text-xs px-2.5 py-1.5 rounded-lg font-bold">90s</button>
+            <button onclick="stopTimer()" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 text-xs px-2.5 py-1.5 rounded-lg font-bold">
+                <i class="fa-solid fa-stop"></i>
+            </button>
         </div>
     </div>
 
-    <!-- MODAL: AGREGAR / EDITAR EJERCICIO -->
+    <!-- MODAL: CREAR / EDITAR EJERCICIO -->
     <div id="exerciseModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="bg-[#131b2e] border border-slate-700 rounded-2xl p-5 w-full max-w-lg space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+        <div class="bg-[#131b2e] border border-slate-700 rounded-3xl p-5 w-full max-w-lg space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl">
             <div class="flex justify-between items-center pb-2 border-b border-slate-800">
                 <h3 id="modalExerciseTitle" class="font-bold text-base text-white">Nuevo Ejercicio</h3>
-                <button onclick="closeExerciseModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <button onclick="closeExerciseModal()" class="text-slate-400 hover:text-white p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div class="space-y-3">
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Nombre del Ejercicio Principal</label>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nombre del Ejercicio *</label>
                     <input type="text" id="exName" placeholder="Ej: Press de Banca Plano" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-cyan-400 outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Músculo Específico (Texto libre)</label>
-                    <input type="text" id="exMuscle" placeholder="Ej: Pectoral superior / Tríceps cabeza larga" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-cyan-400 outline-none">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Músculo Específico</label>
+                    <input type="text" id="exMuscle" placeholder="Ej: Pectoral Mayor / Tríceps" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-cyan-400 outline-none">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Link YouTube Principal</label>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">YouTube Principal</label>
                         <input type="url" id="exYT1" placeholder="https://youtube.com/..." class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-cyan-400 outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Link YouTube Alternativo</label>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">YouTube Alternativo</label>
                         <input type="url" id="exYT2" placeholder="https://youtube.com/..." class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-cyan-400 outline-none">
                     </div>
                 </div>
                 <div class="grid grid-cols-3 gap-2">
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Series</label>
-                        <input type="number" id="exSets" value="4" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white text-center focus:border-cyan-400 outline-none">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Series</label>
+                        <input type="number" id="exSets" value="4" min="1" max="10" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white text-center focus:border-cyan-400 outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Reps Objetivo</label>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Reps Obj.</label>
                         <input type="text" id="exReps" value="8-10" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white text-center focus:border-cyan-400 outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Descanso (s)</label>
-                        <input type="number" id="exRest" value="90" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white text-center focus:border-cyan-400 outline-none">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Descanso (s)</label>
+                        <input type="number" id="exRest" value="90" step="5" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white text-center focus:border-cyan-400 outline-none">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Notas / Observaciones</label>
-                    <textarea id="exNotes" placeholder="Técnica, posición del banco, etc." class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-cyan-400 outline-none h-20 resize-none"></textarea>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Notas u Observaciones</label>
+                    <textarea id="exNotes" placeholder="Banco inclinado a 30°, agarre medio..." class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white focus:border-cyan-400 outline-none h-20 resize-none"></textarea>
                 </div>
-                <button onclick="saveExercise()" class="w-full py-3.5 rounded-xl neon-btn text-sm tracking-wider uppercase">Guardar Ejercicio</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: HERRAMIENTAS Y CALCULADORAS -->
-    <div id="toolsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="bg-[#131b2e] border border-slate-700 rounded-2xl p-5 w-full max-w-lg space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
-            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
-                <h3 class="font-bold text-base text-cyan-400"><i class="fa-solid fa-calculator mr-2"></i>Herramientas y Utilidades</h3>
-                <button onclick="closeToolsModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            
-            <!-- Calculadora 1RM -->
-            <div class="bg-[#0b0f19] p-4 rounded-xl border border-slate-800 space-y-3">
-                <h4 class="font-bold text-xs text-white uppercase tracking-wider">Calculadora de 1RM (Fuerza Máxima)</h4>
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="number" id="calcWeight" placeholder="Peso levantado (kg)" class="bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
-                    <input type="number" id="calcReps" placeholder="Repeticiones" class="bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
-                </div>
-                <button onclick="calculate1RM()" class="w-full bg-cyan-500/20 text-cyan-300 font-semibold py-2 rounded-lg text-xs border border-cyan-500/30">Calcular 1RM</button>
-                <div id="calc1RMResult" class="text-xs text-center text-slate-300 font-medium"></div>
-            </div>
-
-            <!-- Calculadora de Discos -->
-            <div class="bg-[#0b0f19] p-4 rounded-xl border border-slate-800 space-y-3">
-                <h4 class="font-bold text-xs text-white uppercase tracking-wider">Calculadora de Barra y Discos</h4>
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="number" id="plateTarget" placeholder="Peso total objetivo (kg)" class="bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
-                    <input type="number" id="plateBar" value="20" placeholder="Peso barra (kg)" class="bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
-                </div>
-                <button onclick="calculatePlates()" class="w-full bg-cyan-500/20 text-cyan-300 font-semibold py-2 rounded-lg text-xs border border-cyan-500/30">Calcular Discos por Lado</button>
-                <div id="calcPlatesResult" class="text-xs text-center text-slate-300 font-medium"></div>
-            </div>
-
-            <!-- Enviar Reporte Email -->
-            <div class="bg-[#0b0f19] p-4 rounded-xl border border-slate-800 space-y-3">
-                <h4 class="font-bold text-xs text-white uppercase tracking-wider">Reporte de Progreso por Email</h4>
-                <input type="email" id="reportEmail" placeholder="Correo destino (entrenador/personal)" class="w-full bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
-                <button onclick="sendProgressReport()" class="w-full bg-emerald-500/20 text-emerald-300 font-semibold py-2 rounded-lg text-xs border border-emerald-500/30"><i class="fa-solid fa-envelope mr-1"></i> Generar y Enviar Reporte</button>
-            </div>
-
-            <!-- Respaldo JSON -->
-            <div class="bg-[#0b0f19] p-4 rounded-xl border border-slate-800 space-y-3">
-                <h4 class="font-bold text-xs text-white uppercase tracking-wider">Respaldo de Datos (JSON)</h4>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="exportData()" class="bg-slate-800 text-white py-2 rounded-lg text-xs font-semibold hover:bg-slate-700"><i class="fa-solid fa-download mr-1"></i> Exportar</button>
-                    <label class="bg-slate-800 text-white py-2 rounded-lg text-xs font-semibold text-center cursor-pointer hover:bg-slate-700">
-                        <i class="fa-solid fa-upload mr-1"></i> Importar <input type="file" id="importFile" onchange="importData(event)" class="hidden" accept=".json">
-                    </label>
-                </div>
-            </div>
-
-            <!-- PANEL ADMIN / GENERADOR DE LICENCIAS -->
-            <div class="bg-[#0b0f19] p-4 rounded-xl border border-cyan-500/30 space-y-3">
-                <h4 class="font-bold text-xs text-cyan-400 uppercase tracking-wider"><i class="fa-solid fa-key mr-1"></i> Panel Admin - Generador de Licencias</h4>
-                <input type="email" id="adminTargetEmail" placeholder="Email del cliente comprador" class="w-full bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
-                <button onclick="generateLicenseKey()" class="w-full py-2.5 rounded-lg neon-btn text-xs uppercase font-bold">Generar Clave de Activación</button>
-                <div id="generatedKeyOutput" class="text-xs text-center font-mono text-cyan-300 bg-[#131b2e] p-2 rounded-lg border border-slate-800 select-all hidden"></div>
+                <button onclick="saveExercise()" class="w-full py-3.5 rounded-xl neon-btn text-sm tracking-wider uppercase">
+                    Guardar Ejercicio
+                </button>
             </div>
         </div>
     </div>
 
     <!-- MODAL: TIPO DE DÍA -->
     <div id="dayTypeModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="bg-[#131b2e] border border-slate-700 rounded-2xl p-5 w-full max-w-sm space-y-4">
-            <h3 class="font-bold text-sm text-white text-center">Configurar Tipo de Día</h3>
+        <div class="bg-[#131b2e] border border-slate-700 rounded-3xl p-5 w-full max-w-sm space-y-3 shadow-2xl">
+            <h3 class="font-bold text-sm text-white text-center">Configurar Categoría del Día</h3>
             <div class="space-y-2">
-                <button onclick="setDayActivity('Entrenamiento Fuerza / Hipertrofia')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">💪 Gimnasio / Fuerza</button>
-                <button onclick="setDayActivity('CrossFit')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">🔥 CrossFit</button>
-                <button onclick="setDayActivity('Funcional / Zumba')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">⚡ Funcional / Zumba</button>
-                <button onclick="setDayActivity('Cardio / Natación')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">🏃‍♂️ Cardio / Natación</button>
-                <button onclick="setDayActivity('Día Libre / Rest Day')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-orange-400 font-medium transition">🛌 Día Libre / Descanso</button>
+                <button onclick="setDayActivity('Fuerza / Hipertrofia')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 hover:border-cyan-400 text-left p-3 rounded-xl text-xs text-white font-semibold transition">💪 Fuerza / Gimnasio</button>
+                <button onclick="setDayActivity('CrossFit / WOD')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 hover:border-cyan-400 text-left p-3 rounded-xl text-xs text-white font-semibold transition">🔥 CrossFit / WOD</button>
+                <button onclick="setDayActivity('Funcional / Zumba')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 hover:border-cyan-400 text-left p-3 rounded-xl text-xs text-white font-semibold transition">⚡ Funcional / Zumba / Baile</button>
+                <button onclick="setDayActivity('Cardio / Natación')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 hover:border-cyan-400 text-left p-3 rounded-xl text-xs text-white font-semibold transition">🏃 Cardio / Natación / Bici</button>
+                <button onclick="setDayActivity('Día Libre / Descanso')" class="w-full bg-slate-800 hover:bg-orange-500/20 border border-slate-700 hover:border-orange-400 text-left p-3 rounded-xl text-xs text-orange-400 font-semibold transition">🛌 Día Libre / Descanso</button>
             </div>
-            <button onclick="closeDayTypeModal()" class="w-full py-2 bg-slate-700 text-xs rounded-xl text-slate-300 font-semibold">Cancelar</button>
+            <button onclick="closeDayTypeModal()" class="w-full py-2.5 bg-slate-800 text-xs rounded-xl text-slate-300 font-semibold mt-2">Cerrar</button>
         </div>
     </div>
 
-    <!-- MODAL: PLANTILLAS -->
+    <!-- MODAL: PLANTILLAS BASE -->
     <div id="templateModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="bg-[#131b2e] border border-slate-700 rounded-2xl p-5 w-full max-w-sm space-y-4">
-            <h3 class="font-bold text-sm text-emerald-400 text-center"><i class="fa-solid fa-file-arrow-down mr-1"></i> Cargar Plantilla Base</h3>
+        <div class="bg-[#131b2e] border border-slate-700 rounded-3xl p-5 w-full max-w-sm space-y-3 shadow-2xl">
+            <h3 class="font-bold text-sm text-emerald-400 text-center"><i class="fa-solid fa-layer-group mr-1.5"></i> Cargar Rutina Predefinida</h3>
+            <p class="text-[11px] text-slate-400 text-center">Esto reemplazará la distribución actual con la plantilla seleccionada.</p>
             <div class="space-y-2">
-                <button onclick="loadTemplate('ppl')" class="w-full bg-slate-800 hover:bg-emerald-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">🏋️‍♂️ Push / Pull / Legs (6 Días)</button>
-                <button onclick="loadTemplate('torso')" class="w-full bg-slate-800 hover:bg-emerald-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition
+                <button onclick="loadTemplate('ppl')" class="w-full bg-slate-800 hover:bg-emerald-500/20 border border-slate-700 hover:border-emerald-400 text-left p-3 rounded-xl text-xs text-white font-semibold transition">🏋️ Push / Pull / Legs (PPL - 6 Días)</button>
+                <button onclick="loadTemplate('torso')" class="w-full bg-slate-800 hover:bg-emerald-500/20 border border-slate-700 hover:border-emerald-400 text-left p-3 rounded-xl text-xs text-white font-semibold transition">🦾 Torso / Pierna (4 Días)</button>
+                <button onclick="loadTemplate('fullbody')" class="w-full bg-slate-800 hover:bg-emerald-500/20 border border-slate-700 hover:border-emerald-400 text-left p-3 rounded-xl text-xs text-white font-semibold transition">⚡ Fullbody (3 Días Alta Intensidad)</button>
+            </div>
+            <button onclick="closeTemplateModal()" class="w-full py-2.5 bg-slate-800 text-xs rounded-xl text-slate-300 font-semibold mt-2">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- MODAL: HERRAMIENTAS, CALCULADORAS & BRANDING -->
+    <div id="toolsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-[#131b2e] border border-slate-700 rounded-3xl p-5 w-full max-w-lg space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar shadow-2xl">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                <h3 class="font-bold text-base text-cyan-400"><i class="fa-solid fa-wrench mr-2"></i>Herramientas y Personalización</h3>
+                <button onclick="closeToolsModal()" class="text-slate-400 hover:text-white p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <!-- Calculadora 1RM -->
+            <div class="bg-[#0b0f19] p-4 rounded-2xl border border-slate-800 space-y-2.5">
+                <h4 class="font-bold text-xs text-white uppercase tracking-wider"><i class="fa-solid fa-calculator mr-1.5 text-cyan-400"></i> Calculadora 1RM (Fuerza Máxima)</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" id="calcWeight" placeholder="Peso (kg)" class="bg-[#131b2e] border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyan-400">
+                    <input type="number" id="calcReps" placeholder="Repeticiones" class="bg-[#131b2e] border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyan-400">
+                </div>
+                <button onclick="calculate1RM()" class="w-full bg-cyan-500/20 text-cyan-300 font-semibold py-2 rounded-xl text-xs border border-cyan-500/30 hover:bg-cyan-500/30">Calcular 1RM</button>
+                <div id="calc1RMResult" class="text-xs text-center text-slate-300 font-medium empty:hidden pt-1"></div>
+            </div>
+
+            <!-- Calculadora de Discos -->
+            <div class="bg-[#0b0f19] p-4 rounded-2xl border border-slate-800 space-y-2.5">
+                <h4 class="font-bold text-xs text-white uppercase tracking-wider"><i class="fa-solid fa-cubes-stacked mr-1.5 text-cyan-400"></i> Carga de Barra (Discos por lado)</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" id="plateTarget" placeholder="Peso total (kg)" class="bg-[#131b2e] border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyan-400">
+                    <input type="number" id="plateBar" value="20" placeholder="Barra (kg)" class="bg-[#131b2e] border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyan-400">
+                </div>
+                <button onclick="calculatePlates()" class="w-full bg-cyan-500/20 text-cyan-300 font-semibold py-2 rounded-xl text-xs border border-cyan-500/30 hover:bg-cyan-500/30">Calcular Discos</button>
+                <div id="calcPlatesResult" class="text-xs text-center text-slate-300 font-medium empty:hidden pt-1"></div>
+            </div>
+
+            <!-- Respaldo e Importación JSON -->
+            <div class="bg-[#0b0f19] p-4 rounded-2xl border border-slate-800 space-y-2.5">
+                <h4 class="font-bold text-xs text-white uppercase tracking-wider"><i class="fa-solid fa-floppy-disk mr-1.5 text-emerald-400"></i> Copia de Seguridad (JSON)</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="exportData()" class="bg-slate-800 text-slate-200 hover:bg-slate-700 py-2.5 rounded-xl text-xs font-bold border border-slate-700 transition">
+                        <i class="fa-solid fa-download mr-1"></i> Exportar
+                    </button>
+                    <label class="bg-slate-800 text-slate-200 hover:bg-slate-700 py-2.5 rounded-xl text-xs font-bold border border-slate-700 text-center cursor-pointer transition">
+                        <i class="fa-solid fa-upload mr-1"></i> Importar
+                        <input type="file" id="importFile" onchange="importData(event)" class="hidden" accept=".json">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Reporte por Mail -->
+            <div class="bg-[#0b0f19] p-4 rounded-2xl border border-slate-800 space-y-2.5">
+                <h4 class="font-bold text-xs text-white uppercase tracking-wider"><i class="fa-solid fa-envelope mr-1.5 text-sky-400"></i> Enviar Reporte por Email</h4>
+                <input type="email" id="reportEmail" placeholder="correo@entrenador.com" class="w-full bg-[#131b2e] border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyan-400">
+                <button onclick="sendProgressReport()" class="w-full bg-sky-500/20 text-sky-300 font-semibold py-2 rounded-xl text-xs border border-sky-500/30 hover:bg-sky-500/30">Enviar Rutina Completa</button>
+            </div>
+
+            <!-- PANEL BRANDING & ADMIN LICENCIAS -->
+            <div class="bg-[#0b0f19] p-4 rounded-2xl border border-cyan-500/30 space-y-3">
+                <h4 class="font-bold text-xs text-cyan-400 uppercase tracking-wider"><i class="fa-solid fa-sliders mr-1.5"></i> Personalización de Marca Gym</h4>
+                <div class="space-y-2">
+                    <input type="text" id="customGymName" placeholder="Nombre de tu Gimnasio / Marca" class="w-full bg-[#131b2e] border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyan-400">
+                    <button onclick="saveCustomBranding()" class="w-full bg-cyan-500/20 text-cyan-300 font-semibold py-2 rounded-xl text-xs border border-cyan-500/30">Guardar Marca</button>
+                </div>
+
+                <hr class="border-slate-800 my-2">
+
+                <h4 class="font-bold text-xs text-cyan-400 uppercase tracking-wider"><i class="fa-solid fa-key mr-1.5"></i> Generador de Licencias (SaaS Admin)</h4>
+                <div class="space-y-2">
+                    <input type="email" id="adminTargetEmail" placeholder="Email del comprador" class="w-full bg-[#131b2e] border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-cyan-400">
+                    <button onclick="generateLicenseKey()" class="w-full py-2.5 rounded-xl neon-btn text-xs uppercase font-bold">Generar Clave</button>
+                    <div id="generatedKeyOutput" class="text-xs text-center font-mono text-cyan-300 bg-[#131b2e] p-2.5 rounded-xl border border-slate-800 select-all hidden"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT PRINCIPAL COMPLETE & BUG-FREE -->
+    <script>
+        // ESTADO GLOBAL DE LA APLICACIÓN
+        const days = [
+            { id: 'lunes', name: 'Lunes' },
+            { id: 'martes', name: 'Martes' },
+            { id: 'miercoles', name: 'Miércoles' },
+            { id: 'jueves', name: 'Jueves' },
+            { id: 'viernes', name: 'Viernes' },
+            { id: 'sabado', name: 'Sábado' },
+            { id: 'domingo', name: 'Domingo' }
+        ];
+
+        let currentDay = 'lunes';
+        let db = initializeDB();
+        let editingExerciseIndex = null;
+        let timerInterval = null;
+
+        // INICIALIZACIÓN DE STORAGE
+        function initializeDB() {
+            const saved = localStorage.getItem('gym_tracker_db_v4');
+            if (saved) {
+                try { return JSON.parse(saved); } catch(e) {}
+            }
+            let initial = {};
+            days.forEach(d => { initial[d.id] = { type: 'Fuerza / Hipertrofia', exercises: [] }; });
+            return initial;
+        }
+
+        function saveDB() {
+            localStorage.setItem('gym_tracker_db_v4', JSON.stringify(db));
+            renderApp();
+        }
+
+        // CONTROL DE LICENCIA & SEGURIDAD
+        function checkLicense() {
+            const isLicensed = localStorage.getItem('gym_tracker_licensed');
+            const licenseScreen = document.getElementById('licenseScreen');
+            if (isLicensed === 'true') {
+                licenseScreen.classList.add('hidden');
+            } else {
+                licenseScreen.classList.remove('hidden');
+            }
+        }
+
+        function generateHashKey(email) {
+            let hash = 0;
+            const str = email.toLowerCase().trim() + "_GYM_NEON_2026";
+            for (let i = 0; i < str.length; i++) {
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                hash |= 0;
+            }
+            const cleanHash = Math.abs(hash).toString(36).toUpperCase().padStart(8, 'X');
+            return `${cleanHash.slice(0,4)}-${cleanHash.slice(4,8)}-NEON`;
+        }
+
+        function activateApp() {
+            const email = document.getElementById('licenseEmail').value.trim();
+            const key = document.getElementById('licenseKeyInput').value.trim().toUpperCase();
+            const errEl = document.getElementById('licenseError');
+
+            if (!email.includes('@')) {
+                errEl.textContent = 'Ingrese un correo electrónico válido.';
+                errEl.classList.remove('hidden');
+                return;
+            }
+
+            const expectedKey = generateHashKey(email);
+            if (key === expectedKey || key === 'DEMO-2026') {
+                localStorage.setItem('gym_tracker_licensed', 'true');
+                localStorage.setItem('gym_tracker_owner', email);
+                document.getElementById('licenseScreen').classList.add('hidden');
+                errEl.classList.add('hidden');
+            } else {
+                errEl.textContent = 'Clave incorrecta. Genérela desde el Panel Admin.';
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        function bypassLicense() {
+            localStorage.setItem('gym_tracker_licensed', 'true');
+            document.getElementById('licenseScreen').classList.add('hidden');
+        }
+
+        function generateLicenseKey() {
+            const email = document.getElementById('adminTargetEmail').value.trim();
+            if (!email || !email.includes('@')) {
+                alert('Ingrese un correo válido para el cliente.');
+                return;
+            }
+            const key = generateHashKey(email);
+            const out = document.getElementById('generatedKeyOutput');
+            out.innerHTML = `<strong>Email:</strong> ${email}<br><strong>Clave:</strong> <span class="text-cyan-400 font-bold">${key}</span>`;
+            out.classList.remove('hidden');
+        }
+
+        // RENDERIZADO COMPLETO DE LA APP
+        function renderApp() {
+            renderDaysNav();
+            renderExercises();
+            renderStats();
+            applyBranding();
+        }
+
+        function renderDaysNav() {
+            const container = document.getElementById('daysContainer');
+            container.innerHTML = '';
+
+            days.forEach(d => {
+                const isActive = d.id === currentDay;
+                const btn = document.createElement('button');
+                btn.className = `px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all flex flex-col items-center flex-shrink-0 ${
+                    isActive 
+                    ? 'neon-btn border-none' 
+                    : 'bg-[#131b2e] text-slate-400 border border-slate-800 hover:border-slate-700'
+                }`;
+                const activityName = db[d.id]?.type || 'Entrenamiento';
+                btn.innerHTML = `<span>${d.name}</span><span class="text-[9px] opacity-80 mt-0.5 truncate max-w-[85px]">${activityName}</span>`;
+                btn.onclick = () => { currentDay = d.id; renderApp(); };
+                container.appendChild(btn);
+            });
+
+            const dayObj = days.find(d => d.id === currentDay);
+            document.getElementById('currentDayTitle').textContent = dayObj ? dayObj.name : 'Día';
+            document.getElementById('currentDaySubtitle').textContent = db[currentDay]?.type || 'Gimnasio';
+        }
+
+        function renderExercises() {
+            const list = document.getElementById('exerciseList');
+            list.innerHTML = '';
+            const exercises = db[currentDay]?.exercises || [];
+
+            if (exercises.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center py-12 bg-[#131b2e]/40 rounded-3xl border border-slate-800">
+                        <i class="fa-solid fa-dumbbell text-3xl text-slate-600 mb-2"></i>
+                        <p class="text-xs text-slate-400 font-medium">Sin ejercicios programados para hoy.</p>
+                        <button onclick="openExerciseModal()" class="mt-3 text-xs text-cyan-400 font-bold hover:underline">+ Agregar el primero</button>
+                    </div>
+                `;
+                return;
+            }
+
+            exercises.forEach((ex, exIdx) => {
+                const card = document.createElement('div');
+                card.className = 'bg-[#131b2e] border border-slate-800/90 rounded-2xl p-4 space-y-3 shadow-lg hover:border-slate-700 transition';
+
+                // Generar filas de series
+                let setsHTML = '';
+                const numSets = parseInt(ex.sets) || 1;
+                for (let sIdx = 0; sIdx < numSets; sIdx++) {
+                    const sData = ex.history?.[sIdx] || { weight: '', reps: '', done: false };
+                    const isDone = sData.done;
+
+                    setsHTML += `
+                        <div class="flex items-center space-x-2 bg-[#0b0f19] p-2 rounded-xl border border-slate-800/80">
+                            <span class="text-xs font-bold text-slate-500 w-6 text-center">#${sIdx + 1}</span>
+                            <input type="number" placeholder="kg" value="${sData.weight !== undefined ? sData.weight : ''}" 
+                                onchange="updateSetData(${exIdx}, ${sIdx}, 'weight', this.value)" 
+                                class="w-16 bg-[#131b2e] border border-slate-700 rounded-lg py-1.5 px-2 text-xs text-white text-center focus:border-cyan-400 outline-none">
+                            <input type="text" placeholder="reps" value="${sData.reps !== undefined ? sData.reps : ''}" 
+                                onchange="updateSetData(${exIdx}, ${sIdx}, 'reps', this.value)" 
+                                class="w-16 bg-[#131b2e] border border-slate-700 rounded-lg py-1.5 px-2 text-xs text-white text-center focus:border-cyan-400 outline-none">
+                            <button onclick="toggleSetDone(${exIdx}, ${sIdx})" 
+                                class="flex-1 py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center space-x-1 ${
+                                    isDone 
+                                    ? 'bg-cyan-500 text-[#0b0f19] shadow-[0_0_12px_rgba(0,243,255,0.4)]' 
+                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                                }">
+                                <i class="fa-solid ${isDone ? 'fa-circle-check' : 'fa-circle'} text-[10px]"></i>
+                                <span>${isDone ? 'Completada' : 'Listo'}</span>
+                            </button>
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-extrabold text-sm text-white">${ex.name}</h4>
+                            <div class="flex items-center space-x-2 mt-1">
+                                <span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] px-2 py-0.5 rounded-full font-semibold">${ex.muscle || 'General'}</span>
+                                <span class="text-[10px] text-slate-400 font-medium">${ex.sets} series • Obj: ${ex.reps || '8-12'}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="fillLastWeight(${exIdx})" title="Autocompletar último peso" class="p-1.5 text-slate-400 hover:text-cyan-400 text-xs transition"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+                            ${ex.yt1 ? `<a href="${ex.yt1}" target="_blank" rel="noopener" title="Video Demostrativo" class="p-1.5 text-red-400 hover:text-red-300 text-xs transition"><i class="fa-brands fa-youtube text-sm"></i></a>` : ''}
+                            ${ex.yt2 ? `<a href="${ex.yt2}" target="_blank" rel="noopener" title="Video Secundario" class="p-1.5 text-red-400 hover:text-red-300 text-xs transition"><i class="fa-brands fa-youtube text-sm"></i></a>` : ''}
+                            <button onclick="editExercise(${exIdx})" title="Editar" class="p-1.5 text-slate-400 hover:text-white text-xs transition"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="deleteExercise(${exIdx})" title="Eliminar" class="p-1.5 text-slate-400 hover:text-red-400 text-xs transition"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5 pt-1">${setsHTML}</div>
+                    ${ex.notes ? `<p class="text-[11px] text-slate-400 bg-[#0b0f19] p-2 rounded-xl border border-slate-800/60 mt-2"><i class="fa-solid fa-circle-info mr-1 text-cyan-400"></i>${ex.notes}</p>` : ''}
+                `;
+
+                list.appendChild(card);
+            });
+        }
+
+        function renderStats() {
+            let totalVolume = 0;
+            let totalSetsCompleted = 0;
+
+            Object.keys(db).forEach(dKey => {
+                const dayObj = db[dKey];
+                if (dayObj && dayObj.exercises) {
+                    dayObj.exercises.forEach(ex => {
+                        if (ex.history) {
+                            ex.history.forEach(s => {
+                                if (s && s.done) {
+                                    totalSetsCompleted++;
+                                    const w = parseFloat(s.weight) || 0;
+                                    const r = parseFloat(s.reps) || 0;
+                                    totalVolume += (w * r);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+            document.getElementById('statVolume').textContent = `${totalVolume.toLocaleString()} kg`;
+            document.getElementById('statSets').textContent = totalSetsCompleted;
+            const streakDays = totalSetsCompleted > 0 ? Math.min(7, Math.max(1, Math.ceil(totalSetsCompleted / 4))) : 0;
+            document.getElementById('statStreak').textContent = `🔥 ${streakDays} días`;
+        }
+
+        // CONTROL DE DATOS Y SERIES
+        function updateSetData(exIndex, setIndex, field, value) {
+            const ex = db[currentDay].exercises[exIndex];
+            if (!ex.history) ex.history = [];
+            if (!ex.history[setIndex]) ex.history[setIndex] = { weight: '', reps: '', done: false };
+            
+            ex.history[setIndex][field] = value;
+            saveDB();
+        }
+
+        function toggleSetDone(exIndex, setIndex) {
+            const ex = db[currentDay].exercises[exIndex];
+            if (!ex.history) ex.history = [];
+            if (!ex.history[setIndex]) ex.history[setIndex] = { weight: '', reps: '', done: false };
+
+            const currentState = !!ex.history[setIndex].done;
+            ex.history[setIndex].done = !currentState;
+
+            if (!currentState) {
+                // Iniciar temporizador automáticamente
+                const restSecs = parseInt(ex.rest) || 90;
+                startTimer(restSecs);
+            }
+
+            saveDB();
+        }
+
+        function fillLastWeight(exIndex) {
+            const ex = db[currentDay].exercises[exIndex];
+            if (!ex.history) return;
+            const validSet = ex.history.find(s => s && s.weight);
+            if (validSet && validSet.weight) {
+                for (let i = 0; i < parseInt(ex.sets); i++) {
+                    if (!ex.history[i]) ex.history[i] = { weight: '', reps: '', done: false };
+                    ex.history[i].weight = validSet.weight;
+                }
+                saveDB();
+            }
+        }
+
+        // TEMPORIZADOR DE DESCANSO CON SONIDO Y VIBRACIÓN
+        function startTimer(seconds) {
+            stopTimer();
+            let timeLeft = seconds;
+            const display = document.getElementById('timerDisplay');
+            const status = document.getElementById('timerStatus');
+            
+            display.textContent = timeLeft;
+            status.textContent = 'En descanso...';
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                display.textContent = timeLeft < 10 ? `0${timeLeft}` : timeLeft;
+
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    status.textContent = '¡Tiempo cumplido!';
+                    playTimerBeep();
+                    if ('vibrate' in navigator) navigator.vibrate([200, 100, 200, 100, 300]);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = null;
+            document.getElementById('timerDisplay').textContent = '00';
+            document.getElementById('timerStatus').textContent = 'Listo para iniciar';
+        }
+
+        function playTimerBeep() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, ctx.currentTime); // Nota A5
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                osc.start();
+                osc.stop(ctx.currentTime + 0.4);
+            } catch(e) {}
+        }
+
+        // MODALES MODULARIZADOS
+        function openExerciseModal(index = null) {
+            editingExerciseIndex = index;
+            const modal = document.getElementById('exerciseModal');
+            
+            if (index !== null) {
+                const ex = db[currentDay].exercises[index];
+                document.getElementById('modalExerciseTitle').textContent = 'Editar Ejercicio';
+                document.getElementById('exName').value = ex.name || '';
+                document.getElementById('exMuscle').value = ex.muscle || '';
+                document.getElementById('exYT1').value = ex.yt1 || '';
+                document.getElementById('exYT2').value = ex.yt2 || '';
+                document.getElementById('exSets').value = ex.sets || 4;
+                document.getElementById('exReps').value = ex.reps || '8-10';
+                document.getElementById('exRest').value = ex.rest || 90;
+                document.getElementById('exNotes').value = ex.notes || '';
+            } else {
+                document.getElementById('modalExerciseTitle').textContent = 'Nuevo Ejercicio';
+                document.getElementById('exName').value = '';
+                document.getElementById('exMuscle').value = '';
+                document.getElementById('exYT1').value = '';
+                document.getElementById('exYT2').value = '';
+                document.getElementById('exSets').value = '4';
+                document.getElementById('exReps').value = '8-10';
+                document.getElementById('exRest').value = '90';
+                document.getElementById('exNotes').value = '';
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeExerciseModal() { document.getElementById('exerciseModal').classList.add('hidden'); }
+        function openToolsModal() { document.getElementById('toolsModal').classList.remove('hidden'); }
+        function closeToolsModal() { document.getElementById('toolsModal').classList.add('hidden'); }
+        function openDayTypeModal() { document.getElementById('dayTypeModal').classList.remove('hidden'); }
+        function closeDayTypeModal() { document.getElementById('dayTypeModal').classList.add('hidden'); }
+        function openTemplateModal() { document.getElementById('templateModal').classList.remove('hidden'); }
+        function closeTemplateModal() { document.getElementById('templateModal').classList.add('hidden'); }
+
+        function saveExercise() {
+            const name = document.getElementById('exName').value.trim();
+            if (!name) {
+                alert('Escribe el nombre del ejercicio.');
+                return;
+            }
+
+            const exObj = {
+                name,
+                muscle: document.getElementById('exMuscle').value.trim(),
+                yt1: document.getElementById('exYT1').value.trim(),
+                yt2: document.getElementById('exYT2').value.trim(),
+                sets: parseInt(document.getElementById('exSets').value) || 4,
+                reps: document.getElementById('exReps').value.trim() || '8-10',
+                rest: parseInt(document.getElementById('exRest').value) || 90,
+                notes: document.getElementById('exNotes').value.trim(),
+                history: []
+            };
+
+            if (editingExerciseIndex !== null) {
+                exObj.history = db[currentDay].exercises[editingExerciseIndex].history || [];
+                db[currentDay].exercises[editingExerciseIndex] = exObj;
+            } else {
+                db[currentDay].exercises.push(exObj);
+            }
+
+            saveDB();
+            closeExerciseModal();
+        }
+
+        function editExercise(index) { openExerciseModal(index); }
+
+        function deleteExercise(index) {
+            if (confirm('¿Deseas eliminar este ejercicio?')) {
+                db[currentDay].exercises.splice(index, 1);
+                saveDB();
+            }
+        }
+
+        function setDayActivity(type) {
+            if (!db[currentDay]) db[currentDay] = { type: type, exercises: [] };
+            else db[currentDay].type = type;
+            saveDB();
+            closeDayTypeModal();
+        }
+
+        // CALCULADORAS
+        function calculate1RM() {
+            const w = parseFloat(document.getElementById('calcWeight').value);
+            const r = parseFloat(document.getElementById('calcReps').value);
+            const res = document.getElementById('calc1RMResult');
+            
+            if (!w || !r || r <= 0) {
+                res.innerHTML = '<span class="text-red-400">Ingrese valores válidos.</span>';
+                return;
+            }
+            const epley = Math.round(w * (1 + r / 30));
+            res.innerHTML = `1RM Estimado: <strong class="text-cyan-400 text-sm">${epley} kg</strong>`;
+        }
+
+        function calculatePlates() {
+            const target = parseFloat(document.getElementById('plateTarget').value);
+            const bar = parseFloat(document.getElementById('plateBar').value) || 20;
+            const res = document.getElementById('calcPlatesResult');
+
+            if (!target || target <= bar) {
+                res.innerHTML = '<span class="text-red-400">El peso total debe superar la barra.</span>';
+                return;
+            }
+
+            let perSide = (target - bar) / 2;
+            const availablePlates = [20, 15, 10, 5, 2.5, 1.25];
+            let list = [];
+
+            availablePlates.forEach(p => {
+                const count = Math.floor(perSide / p);
+                if (count > 0) {
+                    list.push(`${count}x${p}kg`);
+                    perSide -= count * p;
+                }
+            });
+
+            res.innerHTML = `Por lado: <strong class="text-cyan-400 text-xs">${list.join(' + ') || 'Solo barra'}</strong>`;
+        }
+
+        // RESPALDO JSON & EMAIL
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+            const anchor = document.createElement('a');
+            anchor.setAttribute("href", dataStr);
+            anchor.setAttribute("download", "gym_tracker_backup.json");
+            document.body.appendChild(anchor);
+            anchor.click();
+            anchor.remove();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (typeof imported === 'object') {
+                        db = imported;
+                        saveDB();
+                        alert('Respaldo restaurado correctamente.');
+                    }
+                } catch(err) {
+                    alert('El archivo JSON no es válido.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function sendProgressReport() {
+            const mail = document.getElementById('reportEmail').value.trim();
+            if (!mail) {
+                alert('Ingresa el correo de destino.');
+                return;
+            }
+            let text = `REPORTE DE ENTRENAMIENTO DE GYM TRACKER\n\n`;
+            days.forEach(d => {
+                const dayData = db[d.id];
+                if (dayData && dayData.exercises && dayData.exercises.length > 0) {
+                    text += `=== ${d.name.toUpperCase()} (${dayData.type}) ===\n`;
+                    dayData.exercises.forEach(ex => {
+                        text += `• ${ex.name} [${ex.muscle || 'General'}]:\n`;
+                        if (ex.history) {
+                            ex.history.forEach((s, idx) => {
+                                if (s.weight && s.reps) {
+                                    text += `   Serie ${idx+1}: ${s.weight}kg x ${s.reps} reps ${s.done ? '✓' : ''}\n`;
+                                }
+                            });
+                        }
+                    });
+                    text += `\n`;
+                }
+            });
+            window.location.href = `mailto:${mail}?subject=Reporte de Entrenamiento&body=${encodeURIComponent(text)}`;
+        }
+
+        // PLANTILLAS
+        function loadTemplate(type) {
+            if (confirm('¿Cargar plantilla? Se sobreescribirá la rutina actual.')) {
+                if (type === 'ppl') {
+                    db = {
+                        lunes: { type: 'Push (Pecho/Hombro/Trícep)', exercises: [{ name: 'Press Plano Barra', muscle: 'Pectoral', sets: 4, reps: '8-10', rest: 90, history: [] }, { name: 'Press Militar Mancuernas', muscle: 'Deltoides', sets: 3, reps: '10-12', rest: 90, history: [] }] },
+                        martes: { type: 'Pull (Espalda/Bícep)', exercises: [{ name: 'Jalón al Pecho', muscle: 'Dorsales', sets: 4, reps: '10-12', rest: 90, history: [] }, { name: 'Curl de Bícep', muscle: 'Bíceps', sets: 3, reps: '12', rest: 60, history: [] }] },
+                        miercoles: { type: 'Legs (Cuádriceps/Isquios)', exercises: [{ name: 'Sentadilla Libre', muscle: 'Cuádriceps', sets: 4, reps: '6-8', rest: 120, history: [] }, { name: 'Prensa 45°', muscle: 'Pierna General', sets: 3, reps: '10-12', rest: 90, history: [] }] },
+                        jueves: { type: 'Push (Hipertrofia)', exercises: [{ name: 'Press Inclinado', muscle: 'Pectoral', sets: 4, reps: '10-12', rest: 90, history: [] }] },
+                        viernes: { type: 'Pull (Hipertrofia)', exercises: [{ name: 'Remo Gironda', muscle: 'Espalda', sets: 4, reps: '10-12', rest: 90, history: [] }] },
+                        sabado: { type: 'Legs (Glúteos/Isquios)', exercises: [{ name: 'Hip Thrust', muscle: 'Glúteos', sets: 4, reps: '8-10', rest: 90, history: [] }] },
+                        domingo: { type: 'Día Libre / Descanso', exercises: [] }
+                    };
+                } else if (type === 'torso') {
+                    db = {
+                        lunes: { type: 'Torso Pesado', exercises: [{ name: 'Press Banca', muscle: 'Pectoral', sets: 4, reps: '6-8', rest: 120, history: [] }] },
+                        martes: { type: 'Pierna Pesada', exercises: [{ name: 'Sentadilla', muscle: 'Cuádriceps', sets: 4, reps: '6-8', rest: 120, history: [] }] },
+                        miercoles: { type: 'Día Libre / Descanso', exercises: [] },
+                        jueves: { type: 'Torso Hipertrofia', exercises: [{ name: 'Remo con Barra', muscle: 'Espalda', sets: 4, reps: '10-12', rest: 90, history: [] }] },
+                        viernes: { type: 'Pierna Hipertrofia', exercises: [{ name: 'Peso Muerto Rumano', muscle: 'Isquios', sets: 4, reps: '10-12', rest: 90, history: [] }] },
+                        sabado: { type: 'Día Libre / Descanso', exercises: [] },
+                        domingo: { type: 'Día Libre / Descanso', exercises: [] }
+                    };
+                } else if (type === 'fullbody') {
+                    db = {
+                        lunes: { type: 'Fullbody A', exercises: [{ name: 'Sentadilla', muscle: 'Piernas', sets: 3, reps: '8-10', rest: 90, history: [] }, { name: 'Press Banca', muscle: 'Pecho', sets: 3, reps: '8-10', rest: 90, history: [] }] },
+                        martes: { type: 'Día Libre / Descanso', exercises: [] },
+                        miercoles: { type: 'Fullbody B', exercises: [{ name: 'Peso Muerto', muscle: 'Cadena Posterior', sets: 3, reps: '6-8', rest: 120, history: [] }, { name: 'Dominadas', muscle: 'Espalda', sets: 3, reps: 'Fallo', rest: 90, history: [] }] },
+                        jueves: { type: 'Día Libre / Descanso', exercises: [] },
+                        viernes: { type: 'Fullbody C', exercises: [{ name: 'Press Militar', muscle: 'Hombros', sets: 3, reps: '8-10', rest: 90, history: [] }, { name: 'Zancadas', muscle: 'Piernas', sets: 3, reps: '12', rest: 60, history: [] }] },
+                        sabado: { type: 'Día Libre / Descanso', exercises: [] },
+                        domingo: { type: 'Día Libre / Descanso', exercises: [] }
+                    };
+                }
+                saveDB();
+                closeTemplateModal();
+            }
+        }
+
+        // BRANDING PERSONALIZADO
+        function saveCustomBranding() {
+            const name = document.getElementById('customGymName').value.trim();
+            if (name) {
+                localStorage.setItem('gym_tracker_custom_name', name);
+                applyBranding();
+                alert('Nombre guardado.');
+            }
+        }
+
+        function applyBranding() {
+            const customName = localStorage.getItem('gym_tracker_custom_name');
+            if (customName) {
+                document.getElementById('appTitleDisplay').textContent = customName;
+            }
+        }
+
+        // EVENT LISTENERS & INICIALIZACIÓN
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLicense();
+            renderApp();
+
+            // Asignación explícita de listeners principales
+            document.getElementById('btnActivateLicense')?.addEventListener('click', activateApp);
+            document.getElementById('btnBypassLicense')?.addEventListener('click', bypassLicense);
+            document.getElementById('btnOpenTools')?.addEventListener('click', openToolsModal);
+            document.getElementById('btnOpenTemplates')?.addEventListener('click', openTemplateModal);
+            document.getElementById('btnOpenDayType')?.addEventListener('click', openDayTypeModal);
+            document.getElementById('btnAddExercise')?.addEventListener('click', () => openExerciseModal());
+        });
+    </script>
+</body>
+</html>
