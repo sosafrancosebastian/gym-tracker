@@ -328,6 +328,9 @@
         let editingExerciseId = null;
         let timerInterval = null;
 
+        // Contexto de audio global para el temporizador
+        window.audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+
         function initializeDB() {
             let initial = {};
             days.forEach(d => { initial[d.id] = { type: 'Gimnasio / Fuerza', exercises: [] }; });
@@ -488,7 +491,7 @@
                         <div class="flex justify-between items-start">
                             <div>
                                 <h4 class="font-bold text-sm text-white">${ex.name}</h4>
-                                ${ex.altName ? `<p class="text-xs text-amber-400/90 font-medium">Alt: ${ex.altName}</p>` : ''}
+                                ${ex.altName ? `<p class="text-xs text-amber-400 font-semibold mt-0.5">Alt: ${ex.altName}</p>` : ''}
                                 <div class="flex items-center space-x-2 mt-1">
                                     <span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] px-2 py-0.5 rounded-full font-medium">${ex.muscle || 'General'}</span>
                                     <span class="text-[10px] text-slate-400">${ex.sets} series • Obj: ${ex.reps}</span>
@@ -594,8 +597,13 @@
             }
         }
 
+        // CONTROL DEL TEMPORIZADOR Y SONIDO (BEEP)
         function startTimer(seconds) {
             stopTimer();
+            if (window.audioCtx && window.audioCtx.state === 'suspended') {
+                window.audioCtx.resume();
+            }
+
             let timeLeft = seconds;
             const display = document.getElementById('timerDisplay');
             if (display) display.textContent = timeLeft;
@@ -605,7 +613,8 @@
                 if (display) display.textContent = timeLeft;
                 if (timeLeft <= 0) {
                     stopTimer();
-                    if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
+                    playBeep();
+                    if ('vibrate' in navigator) navigator.vibrate([200, 100, 200, 100, 300]);
                 }
             }, 1000);
         }
@@ -614,6 +623,28 @@
             clearInterval(timerInterval);
             const display = document.getElementById('timerDisplay');
             if (display) display.textContent = '00';
+        }
+
+        function playBeep() {
+            try {
+                if (window.audioCtx.state === 'suspended') {
+                    window.audioCtx.resume();
+                }
+                const oscillator = window.audioCtx.createOscillator();
+                const gainNode = window.audioCtx.createGain();
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, window.audioCtx.currentTime); 
+                gainNode.gain.setValueAtTime(0.2, window.audioCtx.currentTime);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(window.audioCtx.destination);
+                
+                oscillator.start();
+                oscillator.stop(window.audioCtx.currentTime + 0.4); 
+            } catch (e) {
+                console.log("Audio bloqueado o no soportado", e);
+            }
         }
 
         function openExerciseModal(index = null) {
