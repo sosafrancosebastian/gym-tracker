@@ -40,10 +40,10 @@
                     <input type="email" id="licenseEmail" placeholder="tucorreo@gmail.com" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-400 outline-none">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Clave de Activación (16 dígitos)</label>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Clave de Activación</label>
                     <input type="text" id="licenseKeyInput" placeholder="XXXX-XXXX-XXXX-XXXX" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl px-4 py-3 text-sm text-white uppercase font-mono tracking-wider focus:border-cyan-400 outline-none">
                 </div>
-                <button onclick="activateApp()" class="w-full py-3.5 rounded-xl neon-btn text-sm tracking-wider uppercase transition-all">Activar Licencia</button>
+                <button type="button" onclick="activateApp()" class="w-full py-3.5 rounded-xl neon-btn text-sm tracking-wider uppercase transition-all">Activar Licencia</button>
                 <p id="licenseError" class="text-xs text-red-400 text-center hidden">Clave incorrecta o correo inválido.</p>
             </div>
         </div>
@@ -61,10 +61,10 @@
             </div>
         </div>
         <div class="flex items-center space-x-2">
-            <button onclick="openToolsModal()" class="bg-[#131b2e] border border-slate-700 text-cyan-400 px-3 py-2 rounded-xl text-xs font-semibold hover:border-cyan-400 transition">
+            <button type="button" onclick="openToolsModal()" class="bg-[#131b2e] border border-slate-700 text-cyan-400 px-3 py-2 rounded-xl text-xs font-semibold hover:border-cyan-400 transition">
                 <i class="fa-solid fa-calculator mr-1"></i> Herramientas
             </button>
-            <button onclick="openTemplateModal()" class="bg-[#131b2e] border border-slate-700 text-emerald-400 px-3 py-2 rounded-xl text-xs font-semibold hover:border-emerald-400 transition">
+            <button type="button" onclick="openTemplateModal()" class="bg-[#131b2e] border border-slate-700 text-emerald-400 px-3 py-2 rounded-xl text-xs font-semibold hover:border-emerald-400 transition">
                 <i class="fa-solid fa-file-arrow-down mr-1"></i> Plantillas
             </button>
         </div>
@@ -101,10 +101,10 @@
                 <p id="currentDaySubtitle" class="text-xs text-slate-400">Registra tus ejercicios y marcas</p>
             </div>
             <div class="flex space-x-2">
-                <button onclick="openDayTypeModal()" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300 font-medium transition">
+                <button type="button" onclick="openDayTypeModal()" class="bg-slate-800 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300 font-medium transition">
                     <i class="fa-solid fa-list-check mr-1"></i> Tipo de Día
                 </button>
-                <button onclick="openExerciseModal()" class="neon-btn px-3.5 py-1.5 rounded-lg text-xs tracking-wide">
+                <button type="button" onclick="openExerciseModal()" class="neon-btn px-3.5 py-1.5 rounded-lg text-xs tracking-wide">
                     <i class="fa-solid fa-plus mr-1"></i> Ejercicio
                 </button>
             </div>
@@ -122,10 +122,10 @@
         <div>
             <span class="block text-[10px] uppercase font-bold text-slate-400">Descanso</span>
             <div class="flex space-x-1 mt-1">
-                <button onclick="startTimer(30)" class="bg-slate-800 text-[10px] px-2 py-0.5 rounded text-cyan-300 hover:bg-cyan-500/20">30s</button>
-                <button onclick="startTimer(60)" class="bg-slate-800 text-[10px] px-2 py-0.5 rounded text-cyan-300 hover:bg-cyan-500/20">60s</button>
-                <button onclick="startTimer(90)" class="bg-slate-800 text-[10px] px-2 py-0.5 rounded text-cyan-300 hover:bg-cyan-500/20">90s</button>
-                <button onclick="stopTimer()" class="bg-red-500/20 text-red-400 text-[10px] px-2 py-0.5 rounded"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" onclick="startTimer(30)" class="bg-slate-800 text-[10px] px-2 py-0.5 rounded text-cyan-300 hover:bg-cyan-500/20">30s</button>
+                <button type="button" onclick="startTimer(60)" class="bg-slate-800 text-[10px] px-2 py-0.5 rounded text-cyan-300 hover:bg-cyan-500/20">60s</button>
+                <button type="button" onclick="startTimer(90)" class="bg-slate-800 text-[10px] px-2 py-0.5 rounded text-cyan-300 hover:bg-cyan-500/20">90s</button>
+                <button type="button" onclick="stopTimer()" class="bg-red-500/20 text-red-400 text-[10px] px-2 py-0.5 rounded"><i class="fa-solid fa-xmark"></i></button>
             </div>
         </div>
     </div>
@@ -135,7 +135,7 @@
         <div class="bg-[#131b2e] border border-slate-700 rounded-2xl p-5 w-full max-w-lg space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
             <div class="flex justify-between items-center pb-2 border-b border-slate-800">
                 <h3 id="modalExerciseTitle" class="font-bold text-base text-white">Configuración del Ejercicio</h3>
-                <button onclick="closeExerciseModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <button type="button" onclick="closeExerciseModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div class="space-y-3">
                 <div class="grid grid-cols-2 gap-2">
@@ -148,3 +148,679 @@
                         <input type="url" id="exYT1" placeholder="https://youtube.com/..." class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-cyan-400 outline-none">
                     </div>
                 </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-medium text-amber-400/90 mb-1">Ejercicio Alternativo</label>
+                        <input type="text" id="exAltName" placeholder="Ej: Press con Mancuernas" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-amber-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-amber-400/90 mb-1">Link YouTube Alternativo</label>
+                        <input type="url" id="exYT2" placeholder="https://youtube.com/..." class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-amber-400 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Músculo Específico</label>
+                    <input type="text" id="exMuscle" placeholder="Ej: Pectoral Mayor / Pecho Superior" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-cyan-400 outline-none">
+                </div>
+
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Series</label>
+                        <input type="number" id="exSets" value="4" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white text-center focus:border-cyan-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Reps Objetivo</label>
+                        <input type="text" id="exReps" value="8-10" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white text-center focus:border-cyan-400 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Descanso (s)</label>
+                        <input type="number" id="exRest" value="90" class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-sm text-white text-center focus:border-cyan-400 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Notas / Observaciones</label>
+                    <textarea id="exNotes" placeholder="Técnica, posición del banco, etc." class="w-full bg-[#0b0f19] border border-slate-700 rounded-xl p-3 text-xs text-white focus:border-cyan-400 outline-none h-16 resize-none"></textarea>
+                </div>
+                <button type="button" onclick="saveExercise()" class="w-full py-3.5 rounded-xl neon-btn text-sm tracking-wider uppercase">Guardar Ejercicio</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: HERRAMIENTAS Y CALCULADORAS -->
+    <div id="toolsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-[#131b2e] border border-slate-700 rounded-2xl p-5 w-full max-w-lg space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                <h3 class="font-bold text-base text-cyan-400"><i class="fa-solid fa-calculator mr-2"></i>Herramientas y Perfil</h3>
+                <button type="button" onclick="closeToolsModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <!-- Datos Personales (Perfil Alumno) -->
+            <div class="bg-[#0b0f19] p-4 rounded-xl border border-slate-800 space-y-3">
+                <h4 class="font-bold text-xs text-white uppercase tracking-wider"><i class="fa-solid fa-user-gear text-cyan-400 mr-1"></i> Ficha Corporal del Alumno</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] text-slate-400 mb-1">Peso Corporal (kg)</label>
+                        <input type="number" id="userWeight" placeholder="Ej: 75.5" onchange="saveUserProfile()" class="w-full bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-cyan-400">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-slate-400 mb-1">Altura (cm o m)</label>
+                        <input type="text" id="userHeight" placeholder="Ej: 175 cm / 1.75 m" onchange="saveUserProfile()" class="w-full bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-cyan-400">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculadora 1RM -->
+            <div class="bg-[#0b0f19] p-4 rounded-xl border border-slate-800 space-y-3">
+                <h4 class="font-bold text-xs text-white uppercase tracking-wider">Calculadora de 1RM (Fuerza Máxima)</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" id="calcWeight" placeholder="Peso levantado (kg)" class="bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
+                    <input type="number" id="calcReps" placeholder="Repeticiones" class="bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
+                </div>
+                <button type="button" onclick="calculate1RM()" class="w-full bg-cyan-500/20 text-cyan-300 font-semibold py-2 rounded-lg text-xs border border-cyan-500/30">Calcular 1RM</button>
+                <div id="calc1RMResult" class="text-xs text-center text-slate-300 font-medium"></div>
+            </div>
+
+            <!-- Calculadora de Discos -->
+            <div class="bg-[#0b0f19] p-4 rounded-xl border border-slate-800 space-y-3">
+                <h4 class="font-bold text-xs text-white uppercase tracking-wider">Calculadora de Barra y Discos</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" id="plateTarget" placeholder="Peso total objetivo (kg)" class="bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
+                    <input type="number" id="plateBar" value="20" placeholder="Peso barra (kg)" class="bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
+                </div>
+                <button type="button" onclick="calculatePlates()" class="w-full bg-cyan-500/20 text-cyan-300 font-semibold py-2 rounded-lg text-xs border border-cyan-500/30">Calcular Discos por Lado</button>
+                <div id="calcPlatesResult" class="text-xs text-center text-slate-300 font-medium"></div>
+            </div>
+
+            <!-- Enviar Reporte Email -->
+            <div class="bg-[#0b0f19] p-4 rounded-xl border border-slate-800 space-y-3">
+                <h4 class="font-bold text-xs text-white uppercase tracking-wider">Reporte de Progreso por Email</h4>
+                <input type="email" id="reportEmail" placeholder="Correo del Entrenador" class="w-full bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
+                <button type="button" onclick="sendProgressReport()" class="w-full bg-emerald-500/20 text-emerald-300 font-semibold py-2 rounded-lg text-xs border border-emerald-500/30"><i class="fa-solid fa-envelope mr-1"></i> Generar y Enviar Reporte</button>
+            </div>
+
+            <!-- Respaldo JSON -->
+            <div class="bg-[#0b0f19] p-4 rounded-xl border border-slate-800 space-y-3">
+                <h4 class="font-bold text-xs text-white uppercase tracking-wider">Respaldo de Datos (JSON)</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="exportData()" class="bg-slate-800 text-white py-2 rounded-lg text-xs font-semibold hover:bg-slate-700"><i class="fa-solid fa-download mr-1"></i> Exportar</button>
+                    <label class="bg-slate-800 text-white py-2 rounded-lg text-xs font-semibold text-center cursor-pointer hover:bg-slate-700">
+                        <i class="fa-solid fa-upload mr-1"></i> Importar <input type="file" id="importFile" onchange="importData(event)" class="hidden" accept=".json">
+                    </label>
+                </div>
+            </div>
+
+            <!-- PANEL ADMIN / GENERADOR DE LICENCIAS (PROTEGIDO) -->
+            <div class="bg-[#0b0f19] p-4 rounded-xl border border-cyan-500/30 space-y-3">
+                <div class="flex justify-between items-center">
+                    <h4 class="font-bold text-xs text-cyan-400 uppercase tracking-wider"><i class="fa-solid fa-lock mr-1"></i> Panel Administrador</h4>
+                    <button type="button" id="adminToggleBtn" onclick="toggleAdminPanel()" class="text-[10px] text-slate-400 hover:text-cyan-400 underline">Bloquear / Desbloquear</button>
+                </div>
+
+                <div id="adminAuthLock" class="space-y-2">
+                    <input type="password" id="adminPasswordInput" placeholder="Contraseña Maestra Admin" class="w-full bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
+                    <button type="button" onclick="unlockAdmin()" class="w-full py-2 bg-slate-800 text-cyan-300 hover:bg-slate-700 rounded-lg text-xs font-bold border border-slate-700">Acceder</button>
+                    <p id="adminAuthError" class="text-[10px] text-red-400 text-center hidden">Contraseña incorrecta.</p>
+                </div>
+
+                <div id="adminPanelContent" class="space-y-3 hidden pt-2 border-t border-slate-800">
+                    <input type="email" id="adminTargetEmail" placeholder="Email del cliente comprador" class="w-full bg-[#131b2e] border border-slate-700 rounded-lg p-2.5 text-xs text-white">
+                    <button type="button" onclick="generateLicenseKey()" class="w-full py-2.5 rounded-lg neon-btn text-xs uppercase font-bold">Generar Clave de Activación</button>
+                    <div id="generatedKeyOutput" class="text-xs text-center font-mono text-cyan-300 bg-[#131b2e] p-2 rounded-lg border border-slate-800 select-all hidden"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: TIPO DE DÍA -->
+    <div id="dayTypeModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-[#131b2e] border border-slate-700 rounded-2xl p-5 w-full max-w-sm space-y-4">
+            <h3 class="font-bold text-sm text-white text-center">Configurar Tipo de Día</h3>
+            <div class="space-y-2">
+                <button type="button" onclick="setDayActivity('Gimnasio / Fuerza')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">💪 Gimnasio / Fuerza</button>
+                <button type="button" onclick="setDayActivity('CrossFit')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">🔥 CrossFit</button>
+                <button type="button" onclick="setDayActivity('Funcional / Zumba')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">⚡ Funcional / Zumba</button>
+                <button type="button" onclick="setDayActivity('Cardio / Natación')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">🏃‍♂️ Cardio / Natación</button>
+                <button type="button" onclick="setDayActivity('Día Libre / Rest Day')" class="w-full bg-slate-800 hover:bg-cyan-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-orange-400 font-medium transition">🛌 Día Libre / Descanso</button>
+            </div>
+            
+            <div class="pt-2 border-t border-slate-800 space-y-2">
+                <label class="block text-[10px] text-slate-400 uppercase font-bold">Otro / Personalizado libre:</label>
+                <div class="flex space-x-2">
+                    <input type="text" id="customDayTypeInput" placeholder="Ej: Calistenia / Movilidad" class="flex-1 bg-[#0b0f19] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-cyan-400">
+                    <button type="button" onclick="saveCustomDayActivity()" class="bg-cyan-500 text-[#0b0f19] px-3 py-2 rounded-xl text-xs font-bold">Guardar</button>
+                </div>
+            </div>
+
+            <button type="button" onclick="closeDayTypeModal()" class="w-full py-2 bg-slate-700 text-xs rounded-xl text-slate-300 font-semibold">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- MODAL: PLANTILLAS -->
+    <div id="templateModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-[#131b2e] border border-slate-700 rounded-2xl p-5 w-full max-w-sm space-y-4">
+            <h3 class="font-bold text-sm text-emerald-400 text-center"><i class="fa-solid fa-file-arrow-down mr-1"></i> Cargar Plantilla Base</h3>
+            <div class="space-y-2">
+                <button type="button" onclick="loadTemplate('ppl')" class="w-full bg-slate-800 hover:bg-emerald-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">🏋️‍♂️ Push / Pull / Legs (6 Días)</button>
+                <button type="button" onclick="loadTemplate('torso')" class="w-full bg-slate-800 hover:bg-emerald-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">🦾 Torso / Pierna (4 Días)</button>
+                <button type="button" onclick="loadTemplate('fullbody')" class="w-full bg-slate-800 hover:bg-emerald-500/20 border border-slate-700 text-left p-3 rounded-xl text-xs text-white font-medium transition">⚡ Fullbody (3 Días)</button>
+            </div>
+            <button type="button" onclick="closeTemplateModal()" class="w-full py-2 bg-slate-700 text-xs rounded-xl text-slate-300 font-semibold">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT DE LA APLICACIÓN -->
+    <script>
+        const MASTER_ADMIN_PASS = "Morita99*";
+
+        const days = [
+            { id: 'lunes', name: 'Lunes' },
+            { id: 'martes', name: 'Martes' },
+            { id: 'miercoles', name: 'Miércoles' },
+            { id: 'jueves', name: 'Jueves' },
+            { id: 'viernes', name: 'Viernes' },
+            { id: 'sabado', name: 'Sábado' },
+            { id: 'domingo', name: 'Domingo' }
+        ];
+
+        let currentDay = 'lunes';
+        let db = JSON.parse(localStorage.getItem('gym_tracker_db_v3')) || initializeDB();
+        let userProfile = JSON.parse(localStorage.getItem('gym_tracker_user_profile')) || { weight: '', height: '' };
+        let editingExerciseId = null;
+        let timerInterval = null;
+
+        function initializeDB() {
+            let initial = {};
+            days.forEach(d => { initial[d.id] = { type: 'Gimnasio / Fuerza', exercises: [] }; });
+            return initial;
+        }
+
+        function saveDB() {
+            localStorage.setItem('gym_tracker_db_v3', JSON.stringify(db));
+            renderApp();
+        }
+
+        function saveUserProfile() {
+            const wInput = document.getElementById('userWeight');
+            const hInput = document.getElementById('userHeight');
+            if (wInput) userProfile.weight = wInput.value;
+            if (hInput) userProfile.height = hInput.value;
+            localStorage.setItem('gym_tracker_user_profile', JSON.stringify(userProfile));
+        }
+
+        function loadUserProfileFields() {
+            const wInput = document.getElementById('userWeight');
+            const hInput = document.getElementById('userHeight');
+            if (wInput) wInput.value = userProfile.weight || '';
+            if (hInput) hInput.value = userProfile.height || '';
+        }
+
+        // LICENCIAMIENTO
+        function checkLicense() {
+            const active = localStorage.getItem('gym_tracker_licensed');
+            if (!active) {
+                const screen = document.getElementById('licenseScreen');
+                if (screen) screen.classList.remove('hidden');
+            }
+        }
+
+        function activateApp() {
+            const email = document.getElementById('licenseEmail').value.trim();
+            const key = document.getElementById('licenseKeyInput').value.trim().toUpperCase();
+            const expectedKey = generateHashKey(email);
+
+            if (key === expectedKey && email.includes('@')) {
+                localStorage.setItem('gym_tracker_licensed', 'true');
+                localStorage.setItem('gym_tracker_owner', email);
+                document.getElementById('licenseScreen').classList.add('hidden');
+            } else {
+                document.getElementById('licenseError').classList.remove('hidden');
+            }
+        }
+
+        function generateHashKey(email) {
+            let hash = 0;
+            const str = email.toLowerCase() + "_GYM_SECRET_2026";
+            for (let i = 0; i < str.length; i++) {
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                hash |= 0;
+            }
+            return Math.abs(hash).toString(36).toUpperCase().padStart(8, 'X') + "-GYM";
+        }
+
+        // PANEL ADMIN CON CONTRASEÑA
+        function unlockAdmin() {
+            const passInput = document.getElementById('adminPasswordInput');
+            if (!passInput) return;
+            if (passInput.value === MASTER_ADMIN_PASS) {
+                document.getElementById('adminAuthLock').classList.add('hidden');
+                document.getElementById('adminPanelContent').classList.remove('hidden');
+                document.getElementById('adminAuthError').classList.add('hidden');
+            } else {
+                document.getElementById('adminAuthError').classList.remove('hidden');
+            }
+        }
+
+        function toggleAdminPanel() {
+            const lock = document.getElementById('adminAuthLock');
+            const content = document.getElementById('adminPanelContent');
+            if (lock && content) {
+                lock.classList.remove('hidden');
+                content.classList.add('hidden');
+                const passInput = document.getElementById('adminPasswordInput');
+                if (passInput) passInput.value = '';
+            }
+        }
+
+        function generateLicenseKey() {
+            const emailInput = document.getElementById('adminTargetEmail');
+            if (!emailInput) return;
+            const email = emailInput.value.trim();
+            if (!email || !email.includes('@')) {
+                alert('Ingresa un correo válido.');
+                return;
+            }
+            const key = generateHashKey(email);
+            const out = document.getElementById('generatedKeyOutput');
+            if (out) {
+                out.textContent = `Clave para ${email}:\n${key}`;
+                out.classList.remove('hidden');
+            }
+        }
+
+        // RENDERIZADO GENERAL
+        function renderApp() {
+            renderDaysNav();
+            renderExercises();
+            renderStats();
+        }
+
+        function renderDaysNav() {
+            const container = document.getElementById('daysContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            days.forEach(d => {
+                const active = d.id === currentDay;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex flex-col items-center ${active ? 'neon-btn' : 'bg-[#131b2e] text-slate-400 border border-slate-800 hover:border-slate-700'}`;
+                btn.innerHTML = `<span>${d.name}</span><span class="text-[9px] opacity-70 mt-0.5 truncate max-w-[80px]">${db[d.id]?.type || 'Entrenamiento'}</span>`;
+                btn.onclick = () => { currentDay = d.id; renderApp(); };
+                container.appendChild(btn);
+            });
+
+            const dayTitle = document.getElementById('currentDayTitle');
+            const daySubtitle = document.getElementById('currentDaySubtitle');
+            if (dayTitle) dayTitle.textContent = days.find(d => d.id === currentDay)?.name || 'Día';
+            if (daySubtitle) daySubtitle.textContent = db[currentDay]?.type || 'Entrenamiento';
+        }
+
+        function renderExercises() {
+            const list = document.getElementById('exerciseList');
+            if (!list) return;
+            list.innerHTML = '';
+            const exercises = db[currentDay]?.exercises || [];
+
+            if (exercises.length === 0) {
+                list.innerHTML = `<div class="text-center py-12 bg-[#131b2e]/40 rounded-2xl border border-slate-800/60"><i class="fa-solid fa-dumbbell text-3xl text-slate-600 mb-2"></i><p class="text-xs text-slate-400">No hay ejercicios registrados para este día.</p></div>`;
+                return;
+            }
+
+            exercises.forEach((ex, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-[#131b2e] border border-slate-800 rounded-2xl p-4 space-y-3 shadow-lg';
+                
+                let setsHTML = '';
+                for (let i = 0; i < ex.sets; i++) {
+                    const sData = ex.history?.[i] || { weight: '', reps: '', done: false };
+                    setsHTML += `
+                        <div class="flex items-center space-x-2 bg-[#0b0f19] p-2 rounded-xl border border-slate-800">
+                            <span class="text-xs font-bold text-slate-400 w-6 text-center">#${i+1}</span>
+                            <input type="number" placeholder="kg" value="${sData.weight}" onchange="updateSetData(${index}, ${i}, 'weight', this.value)" class="w-16 bg-[#131b2e] border border-slate-700 rounded-lg p-1.5 text-xs text-white text-center focus:border-cyan-400 outline-none">
+                            <input type="text" placeholder="reps" value="${sData.reps}" onchange="updateSetData(${index}, ${i}, 'reps', this.value)" class="w-16 bg-[#131b2e] border border-slate-700 rounded-lg p-1.5 text-xs text-white text-center focus:border-cyan-400 outline-none">
+                            <button type="button" onclick="toggleSetDone(${index}, ${i})" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition ${sData.done ? 'bg-cyan-500 text-[#0b0f19] shadow-[0_0_10px_rgba(0,243,255,0.4)]' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}">
+                                ${sData.done ? '<i class="fa-solid fa-check mr-1"></i> Hecho' : 'Completar'}
+                            </button>
+                        </div>
+                    `;
+                }
+
+                const selectedVariant = ex.selectedVariant || 'principal';
+
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold text-sm text-white">${ex.name}</h4>
+                                ${ex.altName ? `<p class="text-xs text-amber-400/90 font-medium">Alt: ${ex.altName}</p>` : ''}
+                                <div class="flex items-center space-x-2 mt-1">
+                                    <span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] px-2 py-0.5 rounded-full font-medium">${ex.muscle || 'General'}</span>
+                                    <span class="text-[10px] text-slate-400">${ex.sets} series • Obj: ${ex.reps}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button type="button" onclick="fillLastWeight(${index})" title="Cargar último peso" class="text-slate-400 hover:text-cyan-400 text-xs p-1"><i class="fa-solid fa-rotate-left"></i></button>
+                                <button type="button" onclick="editExercise(${index})" class="text-slate-400 hover:text-white text-xs p-1"><i class="fa-solid fa-pen"></i></button>
+                                <button type="button" onclick="deleteExercise(${index})" class="text-slate-400 hover:text-red-400 text-xs p-1"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-2 pt-1">
+                            ${ex.yt1 ? `<a href="${ex.yt1}" target="_blank" class="bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] px-2 py-1 rounded-lg hover:bg-red-500/20"><i class="fa-brands fa-youtube mr-1"></i> Video Principal</a>` : ''}
+                            ${ex.yt2 ? `<a href="${ex.yt2}" target="_blank" class="bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] px-2 py-1 rounded-lg hover:bg-amber-500/20"><i class="fa-brands fa-youtube mr-1"></i> Video Alternativo</a>` : ''}
+                        </div>
+
+                        ${ex.altName ? `
+                        <div class="bg-[#0b0f19] p-2 rounded-xl border border-slate-800 flex items-center justify-between mt-2">
+                            <span class="text-[10px] font-semibold text-slate-400">Variante ejecutada hoy:</span>
+                            <div class="flex space-x-1">
+                                <button type="button" onclick="selectVariant(${index}, 'principal')" class="text-[10px] px-2 py-1 rounded-lg font-bold ${selectedVariant === 'principal' ? 'bg-cyan-500 text-[#0b0f19]' : 'bg-slate-800 text-slate-400'}">Principal</button>
+                                <button type="button" onclick="selectVariant(${index}, 'alternativo')" class="text-[10px] px-2 py-1 rounded-lg font-bold ${selectedVariant === 'alternativo' ? 'bg-amber-400 text-[#0b0f19]' : 'bg-slate-800 text-slate-400'}">Alternativo</button>
+                            </div>
+                        </div>` : ''}
+                    </div>
+
+                    <div class="space-y-2 mt-2">${setsHTML}</div>
+                    ${ex.notes ? `<p class="text-[11px] text-slate-400 bg-[#0b0f19] p-2 rounded-lg border border-slate-800/50 mt-2"><i class="fa-solid fa-note-sticky mr-1 text-cyan-400"></i> ${ex.notes}</p>` : ''}
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function renderStats() {
+            let totalVol = 0;
+            let totalSetsDone = 0;
+
+            Object.keys(db).forEach(dKey => {
+                db[dKey].exercises.forEach(ex => {
+                    if (ex.history) {
+                        ex.history.forEach(s => {
+                            if (s.done && s.weight && s.reps) {
+                                totalVol += (parseFloat(s.weight) || 0) * (parseFloat(s.reps) || 0);
+                                totalSetsDone++;
+                            }
+                        });
+                    }
+                });
+            });
+
+            const statVol = document.getElementById('statVolume');
+            const statSets = document.getElementById('statSets');
+            const statStrk = document.getElementById('statStreak');
+
+            if (statVol) statVol.textContent = `${totalVol.toLocaleString()} kg`;
+            if (statSets) statSets.textContent = totalSetsDone;
+            if (statStrk) statStrk.textContent = `🔥 ${totalSetsDone > 0 ? Math.min(7, Math.ceil(totalSetsDone/4)) : 0} días`;
+        }
+
+        function selectVariant(exIndex, variant) {
+            db[currentDay].exercises[exIndex].selectedVariant = variant;
+            saveDB();
+        }
+
+        function updateSetData(exIndex, setIndex, field, value) {
+            if (!db[currentDay].exercises[exIndex].history) {
+                db[currentDay].exercises[exIndex].history = [];
+            }
+            if (!db[currentDay].exercises[exIndex].history[setIndex]) {
+                db[currentDay].exercises[exIndex].history[setIndex] = { weight: '', reps: '', done: false };
+            }
+            db[currentDay].exercises[exIndex].history[setIndex][field] = value;
+            saveDB();
+        }
+
+        function toggleSetDone(exIndex, setIndex) {
+            if (!db[currentDay].exercises[exIndex].history) {
+                db[currentDay].exercises[exIndex].history = [];
+            }
+            if (!db[currentDay].exercises[exIndex].history[setIndex]) {
+                db[currentDay].exercises[exIndex].history[setIndex] = { weight: '', reps: '', done: false };
+            }
+            const current = db[currentDay].exercises[exIndex].history[setIndex].done;
+            db[currentDay].exercises[exIndex].history[setIndex].done = !current;
+            
+            if (!current) {
+                startTimer(db[currentDay].exercises[exIndex].rest || 90);
+            }
+            saveDB();
+        }
+
+        function fillLastWeight(exIndex) {
+            const ex = db[currentDay].exercises[exIndex];
+            if (!ex.history || ex.history.length === 0) return;
+            const firstValidWeight = ex.history.find(s => s.weight)?.weight;
+            if (firstValidWeight) {
+                for (let i = 0; i < ex.sets; i++) {
+                    if (!ex.history[i]) ex.history[i] = { weight: '', reps: '', done: false };
+                    ex.history[i].weight = firstValidWeight;
+                }
+                saveDB();
+            }
+        }
+
+        function startTimer(seconds) {
+            stopTimer();
+            let timeLeft = seconds;
+            const display = document.getElementById('timerDisplay');
+            if (display) display.textContent = timeLeft;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                if (display) display.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    if ('vibrate' in navigator) navigator.vibrate([200, 100, 200]);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            const display = document.getElementById('timerDisplay');
+            if (display) display.textContent = '00';
+        }
+
+        function openExerciseModal(index = null) {
+            editingExerciseId = index;
+            if (index !== null) {
+                const ex = db[currentDay].exercises[index];
+                document.getElementById('modalExerciseTitle').textContent = 'Editar Ejercicio';
+                document.getElementById('exName').value = ex.name || '';
+                document.getElementById('exAltName').value = ex.altName || '';
+                document.getElementById('exMuscle').value = ex.muscle || '';
+                document.getElementById('exYT1').value = ex.yt1 || '';
+                document.getElementById('exYT2').value = ex.yt2 || '';
+                document.getElementById('exSets').value = ex.sets || 4;
+                document.getElementById('exReps').value = ex.reps || '8-10';
+                document.getElementById('exRest').value = ex.rest || 90;
+                document.getElementById('exNotes').value = ex.notes || '';
+            } else {
+                document.getElementById('modalExerciseTitle').textContent = 'Nuevo Ejercicio';
+                document.getElementById('exName').value = '';
+                document.getElementById('exAltName').value = '';
+                document.getElementById('exMuscle').value = '';
+                document.getElementById('exYT1').value = '';
+                document.getElementById('exYT2').value = '';
+                document.getElementById('exSets').value = '4';
+                document.getElementById('exReps').value = '8-10';
+                document.getElementById('exRest').value = '90';
+                document.getElementById('exNotes').value = '';
+            }
+            document.getElementById('exerciseModal').classList.remove('hidden');
+        }
+
+        function closeExerciseModal() { document.getElementById('exerciseModal').classList.add('hidden'); }
+        function openToolsModal() { 
+            loadUserProfileFields();
+            document.getElementById('toolsModal').classList.remove('hidden'); 
+        }
+        function closeToolsModal() { document.getElementById('toolsModal').classList.add('hidden'); }
+        function openDayTypeModal() { document.getElementById('dayTypeModal').classList.remove('hidden'); }
+        function closeDayTypeModal() { document.getElementById('dayTypeModal').classList.add('hidden'); }
+        function openTemplateModal() { document.getElementById('templateModal').classList.remove('hidden'); }
+        function closeTemplateModal() { document.getElementById('templateModal').classList.add('hidden'); }
+
+        function saveExercise() {
+            const nameInput = document.getElementById('exName');
+            if (!nameInput) return;
+            const name = nameInput.value.trim();
+            if (!name) return alert('Ingresa el nombre del ejercicio principal.');
+
+            const exData = {
+                name,
+                altName: document.getElementById('exAltName').value.trim(),
+                muscle: document.getElementById('exMuscle').value.trim(),
+                yt1: document.getElementById('exYT1').value.trim(),
+                yt2: document.getElementById('exYT2').value.trim(),
+                sets: parseInt(document.getElementById('exSets').value) || 4,
+                reps: document.getElementById('exReps').value.trim(),
+                rest: parseInt(document.getElementById('exRest').value) || 90,
+                notes: document.getElementById('exNotes').value.trim(),
+                selectedVariant: 'principal',
+                history: []
+            };
+
+            if (editingExerciseId !== null) {
+                exData.history = db[currentDay].exercises[editingExerciseId].history || [];
+                exData.selectedVariant = db[currentDay].exercises[editingExerciseId].selectedVariant || 'principal';
+                db[currentDay].exercises[editingExerciseId] = exData;
+            } else {
+                db[currentDay].exercises.push(exData);
+            }
+
+            saveDB();
+            closeExerciseModal();
+        }
+
+        function editExercise(index) { openExerciseModal(index); }
+        function deleteExercise(index) {
+            if (confirm('¿Eliminar este ejercicio?')) {
+                db[currentDay].exercises.splice(index, 1);
+                saveDB();
+            }
+        }
+
+        function setDayActivity(type) {
+            db[currentDay].type = type;
+            saveDB();
+            closeDayTypeModal();
+        }
+
+        function saveCustomDayActivity() {
+            const customInput = document.getElementById('customDayTypeInput');
+            if (!customInput) return;
+            const custom = customInput.value.trim();
+            if (!custom) return alert('Escribe un nombre para el día.');
+            db[currentDay].type = custom;
+            saveDB();
+            closeDayTypeModal();
+        }
+
+        function calculate1RM() {
+            const w = parseFloat(document.getElementById('calcWeight').value);
+            const r = parseFloat(document.getElementById('calcReps').value);
+            if (!w || !r) return;
+            const rm1 = Math.round(w * (1 + r / 30));
+            document.getElementById('calc1RMResult').innerHTML = `1RM Estimado: <strong class="text-cyan-400 text-sm">${rm1} kg</strong>`;
+        }
+
+        function calculatePlates() {
+            const target = parseFloat(document.getElementById('plateTarget').value);
+            const bar = parseFloat(document.getElementById('plateBar').value) || 20;
+            if (!target || target <= bar) return;
+            let perSide = (target - bar) / 2;
+            const plates = [20, 15, 10, 5, 2.5, 1.25];
+            let breakdown = [];
+            plates.forEach(p => {
+                let count = Math.floor(perSide / p);
+                if (count > 0) {
+                    breakdown.push(`${count}x${p}kg`);
+                    perSide -= count * p;
+                }
+            });
+            document.getElementById('calcPlatesResult').innerHTML = `Discos por lado: <strong class="text-cyan-400 text-xs">${breakdown.join(' + ') || 'Solo barra'}</strong>`;
+        }
+
+        function sendProgressReport() {
+            const emailInput = document.getElementById('reportEmail');
+            if (!emailInput) return;
+            const email = emailInput.value.trim();
+            if (!email) return alert('Ingresa un correo destino.');
+            
+            let body = `REPORTE DE PROGRESO - GYM TRACKER\n`;
+            body += `----------------------------------------\n`;
+            body += `FICHA DEL ALUMNO:\n`;
+            body += `• Email Registrado: ${localStorage.getItem('gym_tracker_owner') || 'Sin especificar'}\n`;
+            body += `• Peso Actual: ${userProfile.weight ? userProfile.weight + ' kg' : 'No registrado'}\n`;
+            body += `• Altura: ${userProfile.height || 'No registrada'}\n`;
+            body += `----------------------------------------\n\n`;
+
+            Object.keys(db).forEach(dKey => {
+                if (db[dKey].exercises.length > 0) {
+                    body += `--- ${dKey.toUpperCase()} (${db[dKey].type}) ---\n`;
+                    db[dKey].exercises.forEach(ex => {
+                        const executedVariant = (ex.selectedVariant === 'alternativo' && ex.altName) ? `ALT: ${ex.altName}` : `PRINCIPAL: ${ex.name}`;
+                        body += `• ${ex.name} [Ejecutó: ${executedVariant}] (${ex.muscle || 'Gen'}):\n`;
+                        if (ex.history) {
+                            ex.history.forEach((s, i) => {
+                                if (s.weight && s.reps) body += `   Serie ${i+1}: ${s.weight}kg x ${s.reps} reps ${s.done ? '✓' : ''}\n`;
+                            });
+                        }
+                    });
+                    body += `\n`;
+                }
+            });
+
+            window.location.href = `mailto:${email}?subject=Reporte de Gym Tracker&body=${encodeURIComponent(body)}`;
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ db, userProfile }));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "gym_tracker_backup.json");
+            dlAnchorElem.click();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed.db) {
+                        db = parsed.db;
+                        userProfile = parsed.userProfile || { weight: '', height: '' };
+                    } else {
+                        db = parsed;
+                    }
+                    saveDB();
+                    localStorage.setItem('gym_tracker_user_profile', JSON.stringify(userProfile));
+                    alert('Datos restaurados con éxito.');
+                } catch(err) {
+                    alert('Archivo inválido.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function loadTemplate(type) {
+            if (type === 'ppl') {
+                db.lunes = { type: 'Push (Pecho/Trícep)', exercises: [{ name: 'Press Plano', altName: 'Press Mancuernas', muscle: 'Pectoral', sets: 4, reps: '8-10', rest: 90 }] };
+                db.martes = { type: 'Pull (Espalda/Bícep)', exercises: [{ name: 'Dominadas', altName: 'Jalón al Pecho', muscle: 'Dorsales', sets: 4, reps: '8-10', rest: 90 }] };
+                db.miercoles = { type: 'Legs (Pierna)', exercises: [{ name: 'Sentadilla', altName: 'Prensa 45', muscle: 'Cuádriceps', sets: 4, reps: '8-10', rest: 120 }] };
+            }
+            saveDB();
+            closeTemplateModal();
+            alert('Plantilla cargada con éxito.');
+        }
+
+        window.onload = () => {
+            checkLicense();
+            renderApp();
+        };
+    </script>
+</body>
+</html>
